@@ -153,8 +153,9 @@ export async function PUT(req: NextRequest) {
     });
   } catch (err: unknown) {
     console.error("Profil güncelleme hatası:", err);
+    const msg = err instanceof Error ? err.message : "Güncelleme sırasında bir hata oluştu.";
     return NextResponse.json(
-      { error: "Güncelleme sırasında bir hata oluştu." },
+      { error: msg },
       { status: 500 }
     );
   }
