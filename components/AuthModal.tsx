@@ -49,101 +49,90 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
   const languages: Language[] = ["tr", "en", "de", "ru"];
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 sm:p-6 bg-slate-900">
-      {/* Background Video (Rain / Ambient) */}
+    <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 sm:p-6 bg-[#fafafa]">
+      {/* Optional Rain/Ambient Video Background */}
       <video
         autoPlay
         loop
         muted
         playsInline
-        className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none opacity-70"
+        className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none opacity-40"
       >
         <source src="/rain.mp4" type="video/mp4" />
         <source src="/bg.mp4" type="video/mp4" />
       </video>
 
-      {/* Atmospheric Fallback Ambient Gradient (Video olmadığında veya yüklenirken) */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-950/80 via-slate-900/60 to-indigo-950/80 z-0 pointer-events-none" />
+      {/* Frosted Glass Buğu Katmanı */}
+      <div className="absolute inset-0 backdrop-blur-[4px] bg-[#fafafa]/80 z-0 pointer-events-none" />
 
-      {/* Frosted Glass (Buğu ve Sis Katmanı) */}
-      <div className="absolute inset-0 backdrop-blur-md bg-slate-950/30 z-0 pointer-events-none" />
-
-      {/* Main Glass Container */}
+      {/* Main Container */}
       <div className="relative z-10 w-full max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-center py-6">
         
-        {/* Left Side: Welcoming Glass Panel */}
-        <div className="md:col-span-7 bg-white/70 backdrop-blur-xl border border-white/50 rounded-3xl p-7 sm:p-8 shadow-2xl space-y-6">
+        {/* Left Side: Crisp Functional Story & Specs */}
+        <div className="md:col-span-7 space-y-6 px-2 sm:px-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 bg-indigo-50/80 border border-indigo-100 text-indigo-700 text-xs px-3 py-1 rounded-full font-medium mb-4 shadow-2xs">
-              <span>✦</span>
-              <span>{t.welcomeBadge}</span>
+            <div className="cursor-pointer group inline-block select-none mb-3">
+              <span className="text-2xl font-bold tracking-tight text-zinc-900 group-hover:text-zinc-600 transition-colors">
+                notsuscato<span className="text-zinc-400 group-hover:text-zinc-900 inline-block transition-colors">.</span>
+              </span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
-              notsuscato<span className="text-indigo-600">.</span>
+            <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900 tracking-tight leading-snug">
+              {t.welcomeHeadline}
             </h1>
 
-            <p className="text-xl sm:text-2xl font-bold text-slate-800 mt-2 tracking-tight">
-              {t.welcomeHeadline}
-            </p>
-
-            <p className="text-sm text-slate-600 leading-relaxed mt-3 max-w-lg">
+            <p className="text-xs sm:text-sm text-zinc-500 leading-relaxed mt-2.5 max-w-lg font-normal">
               {t.welcomeDesc}
             </p>
           </div>
 
-          {/* Sweet Micro-Features in frosted pills */}
-          <div className="space-y-3 pt-1">
-            <div className="flex items-start gap-3 bg-white/60 backdrop-blur-sm border border-white/60 p-3 rounded-2xl shadow-2xs">
-              <span className="text-indigo-600 font-bold text-base mt-0.5">•</span>
+          {/* Minimalist Structured Specs List (Borders > Shadows) */}
+          <div className="border border-zinc-200/90 bg-white/70 backdrop-blur-md rounded-xl divide-y divide-zinc-100 shadow-2xs">
+            <div className="p-3.5 flex items-start gap-3">
+              <span className="font-mono text-zinc-400 font-semibold text-[11px] mt-0.5">01</span>
               <div>
-                <h2 className="text-xs font-bold text-slate-900">{t.feature1Title}</h2>
-                <p className="text-xs text-slate-600 mt-0.5">{t.feature1Desc}</p>
+                <div className="text-xs font-semibold text-zinc-900">{t.feature1Title}</div>
+                <div className="text-xs text-zinc-500 mt-0.5 leading-relaxed">{t.feature1Desc}</div>
               </div>
             </div>
 
-            <div className="flex items-start gap-3 bg-white/60 backdrop-blur-sm border border-white/60 p-3 rounded-2xl shadow-2xs">
-              <span className="text-indigo-600 font-bold text-base mt-0.5">•</span>
+            <div className="p-3.5 flex items-start gap-3">
+              <span className="font-mono text-zinc-400 font-semibold text-[11px] mt-0.5">02</span>
               <div>
-                <h2 className="text-xs font-bold text-slate-900">{t.feature2Title}</h2>
-                <p className="text-xs text-slate-600 mt-0.5">{t.feature2Desc}</p>
+                <div className="text-xs font-semibold text-zinc-900">{t.feature2Title}</div>
+                <div className="text-xs text-zinc-500 mt-0.5 leading-relaxed">{t.feature2Desc}</div>
               </div>
             </div>
 
-            <div className="flex items-start gap-3 bg-white/60 backdrop-blur-sm border border-white/60 p-3 rounded-2xl shadow-2xs">
-              <span className="text-indigo-600 font-bold text-base mt-0.5">•</span>
+            <div className="p-3.5 flex items-start gap-3">
+              <span className="font-mono text-zinc-400 font-semibold text-[11px] mt-0.5">03</span>
               <div>
-                <h2 className="text-xs font-bold text-slate-900">{t.feature3Title}</h2>
-                <p className="text-xs text-slate-600 mt-0.5">{t.feature3Desc}</p>
+                <div className="text-xs font-semibold text-zinc-900">{t.feature3Title}</div>
+                <div className="text-xs text-zinc-500 mt-0.5 leading-relaxed">{t.feature3Desc}</div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Right Side: Frosted Glass Auth Card */}
+        {/* Right Side: Clean Monochromatic Auth Card */}
         <div className="md:col-span-5 w-full max-w-sm mx-auto">
-          <div className="bg-white/80 backdrop-blur-2xl border border-white/60 rounded-3xl shadow-2xl p-7 space-y-5">
+          <div className="bg-white/90 backdrop-blur-xl border border-zinc-200/90 rounded-2xl shadow-[0_4px_24px_-2px_rgba(0,0,0,0.05)] p-7 space-y-5">
             {/* Top Bar with Language Selector */}
-            <div className="flex items-center justify-between border-b border-slate-200/50 pb-3">
-              <div
-                className="cursor-pointer group select-none"
-                title="notsuscato"
-              >
-                <span className="text-lg font-bold tracking-tight text-slate-900 group-hover:text-indigo-600 transition-colors">
-                  notsuscato<span className="text-indigo-600 group-hover:text-indigo-500 inline-block transition-transform group-hover:scale-125 origin-bottom">.</span>
-                </span>
-              </div>
+            <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
+              <span className="text-xs font-semibold tracking-tight text-zinc-900 uppercase">
+                {isRegister ? t.registerTitle : t.loginTitle}
+              </span>
 
-              <div className="flex gap-1 bg-slate-200/50 backdrop-blur-sm p-1 rounded-xl">
+              <div className="flex gap-1 bg-zinc-100 p-0.5 rounded-lg">
                 {languages.map((l) => (
                   <button
                     key={l}
                     type="button"
                     onClick={() => onLanguageChange(l)}
-                    className={`px-1.5 py-0.5 rounded-lg text-[10px] font-semibold uppercase transition cursor-pointer ${
+                    className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold uppercase transition cursor-pointer ${
                       lang === l
-                        ? "bg-white text-indigo-600 shadow-xs"
-                        : "text-slate-600 hover:text-slate-900"
+                        ? "bg-white text-zinc-900 shadow-2xs"
+                        : "text-zinc-500 hover:text-zinc-800"
                     }`}
                   >
                     {l}
@@ -152,18 +141,8 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
               </div>
             </div>
 
-            {/* Title */}
-            <div>
-              <h3 className="text-base font-bold text-slate-900 tracking-tight">
-                {isRegister ? t.registerTitle : t.loginTitle}
-              </h3>
-              <p className="text-xs text-slate-600 mt-0.5">
-                {t.authNotice}
-              </p>
-            </div>
-
             {error && (
-              <div className="bg-red-50/90 border border-red-200 rounded-xl p-2.5 text-xs text-red-600 font-medium text-center shadow-xs">
+              <div className="bg-red-50 border border-red-200/80 rounded-xl p-2.5 text-xs text-red-600 font-medium text-center">
                 {error}
               </div>
             )}
@@ -171,7 +150,7 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-3.5">
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">
+                <label className="block text-xs font-medium text-zinc-700 mb-1">
                   {t.username}
                 </label>
                 <input
@@ -181,12 +160,12 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="kullanici_adi"
-                  className="w-full bg-white/70 border border-slate-200/90 rounded-xl px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-indigo-500 focus:ring-3 focus:ring-indigo-500/15 transition shadow-2xs"
+                  className="w-full bg-zinc-50/70 border border-zinc-200 rounded-xl px-3.5 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:bg-white focus:outline-none focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 transition"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">
+                <label className="block text-xs font-medium text-zinc-700 mb-1">
                   {t.password}
                 </label>
                 <input
@@ -195,7 +174,7 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-white/70 border border-slate-200/90 rounded-xl px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-indigo-500 focus:ring-3 focus:ring-indigo-500/15 transition shadow-2xs"
+                  className="w-full bg-zinc-50/70 border border-zinc-200 rounded-xl px-3.5 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:bg-white focus:outline-none focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 transition"
                 />
               </div>
 
@@ -205,13 +184,13 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
                     <button
                       type="button"
                       onClick={() => setShowAdminKey(true)}
-                      className="text-xs text-slate-500 hover:text-indigo-600 transition cursor-pointer"
+                      className="text-xs text-zinc-400 hover:text-zinc-700 transition cursor-pointer"
                     >
                       + {t.adminKey}
                     </button>
                   ) : (
                     <div className="space-y-1">
-                      <label className="block text-xs font-medium text-slate-700">
+                      <label className="block text-xs font-medium text-zinc-700">
                         {t.adminKey}
                       </label>
                       <input
@@ -219,7 +198,7 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
                         value={adminKey}
                         onChange={(e) => setAdminKey(e.target.value)}
                         placeholder="secret"
-                        className="w-full bg-white/70 border border-slate-200/90 rounded-xl px-3 py-1.5 text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-indigo-500 focus:ring-3 focus:ring-indigo-500/15 transition shadow-2xs"
+                        className="w-full bg-zinc-50/70 border border-zinc-200 rounded-xl px-3 py-1.5 text-xs text-zinc-900 placeholder-zinc-400 focus:bg-white focus:outline-none focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 transition"
                       />
                     </div>
                   )}
@@ -229,14 +208,14 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-medium py-2.5 rounded-xl shadow-sm transition disabled:opacity-50 text-sm cursor-pointer mt-1"
+                className="w-full bg-zinc-900 hover:bg-zinc-800 active:bg-black text-white font-medium py-2.5 rounded-xl shadow-xs active:scale-[0.98] transition-all duration-150 disabled:opacity-50 text-sm cursor-pointer mt-1"
               >
                 {loading ? t.saving : isRegister ? t.registerBtn : t.loginBtn}
               </button>
             </form>
 
             {/* Toggle */}
-            <div className="border-t border-slate-200/50 pt-3 text-center text-xs text-slate-600">
+            <div className="border-t border-zinc-100 pt-3 text-center text-xs text-zinc-500">
               <span>{isRegister ? t.hasAccount : t.noAccount} </span>
               <button
                 type="button"
@@ -244,14 +223,14 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
                   setIsRegister(!isRegister);
                   setError(null);
                 }}
-                className="text-indigo-600 hover:text-indigo-700 font-semibold ml-1 cursor-pointer"
+                className="text-zinc-900 hover:underline font-semibold ml-1 cursor-pointer"
               >
                 {isRegister ? t.signIn : t.signUp}
               </button>
             </div>
 
             {/* Disclaimer */}
-            <p className="text-[10px] text-slate-500 text-center leading-relaxed">
+            <p className="text-[10px] text-zinc-400 text-center leading-relaxed">
               {t.legalDisclaimer}
             </p>
           </div>

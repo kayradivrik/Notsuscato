@@ -47,19 +47,19 @@ export function NoteList({
   };
 
   return (
-    <aside className="w-64 border-r border-slate-200/80 bg-slate-50/70 flex flex-col h-full text-xs select-none shrink-0">
+    <aside className="w-64 border-r border-zinc-200/80 bg-[#fbfbfb] flex flex-col h-full text-xs select-none shrink-0">
       {/* Top search & create */}
-      <div className="p-3 border-b border-slate-200/80 flex items-center gap-2">
+      <div className="p-3 border-b border-zinc-200/80 flex items-center gap-2">
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder={t.searchPlaceholder}
-          className="flex-1 bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 text-xs transition"
+          className="flex-1 bg-white border border-zinc-200 rounded-xl px-3 py-1.5 text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-900/5 text-xs transition"
         />
         <button
           onClick={onCreateNote}
-          className="bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-medium px-3 py-1.5 rounded-xl shadow-xs transition cursor-pointer text-xs shrink-0"
+          className="bg-zinc-900 hover:bg-zinc-800 active:scale-[0.98] text-white font-medium px-3 py-1.5 rounded-xl shadow-2xs transition-all duration-150 cursor-pointer text-xs shrink-0"
         >
           {t.newNote}
         </button>
@@ -68,7 +68,7 @@ export function NoteList({
       {/* Note items list */}
       <div className="flex-1 overflow-y-auto py-1.5 space-y-1">
         {filteredNotes.length === 0 ? (
-          <div className="p-6 text-center text-slate-400 text-xs">
+          <div className="p-6 text-center text-zinc-400 text-xs">
             {searchQuery ? t.noResults : t.noNotes}
           </div>
         ) : (
@@ -82,20 +82,20 @@ export function NoteList({
                 onClick={() => onSelectNote(note)}
                 className={`group mx-2 px-3 py-2.5 rounded-xl cursor-pointer flex items-center justify-between gap-1.5 transition ${
                   isActive
-                    ? "bg-white border border-indigo-200 shadow-xs text-slate-900 font-medium"
-                    : "text-slate-700 hover:bg-slate-200/50"
+                    ? "bg-white border border-zinc-300 shadow-2xs text-zinc-950 font-medium"
+                    : "text-zinc-600 hover:bg-zinc-100"
                 }`}
               >
                 <div className="truncate flex-1">
                   <span className="truncate block">
-                    {note.isPinned && <span className="text-indigo-600 font-bold mr-1">•</span>}
+                    {note.isPinned && <span className="text-zinc-900 font-bold mr-1">•</span>}
                     {note.title.trim() || t.untitled}
                   </span>
                 </div>
 
                 <div className="flex items-center gap-1.5 shrink-0 text-[10px]">
                   {remaining && (
-                    <span className="bg-indigo-50 text-indigo-700 border border-indigo-100 px-1.5 py-0.5 rounded-md font-mono font-medium">
+                    <span className="bg-zinc-100 text-zinc-600 border border-zinc-200 px-1.5 py-0.5 rounded-md font-mono font-medium">
                       {remaining}
                     </span>
                   )}
@@ -106,7 +106,7 @@ export function NoteList({
                       onTogglePin(note);
                     }}
                     title={note.isPinned ? t.unpin : t.pin}
-                    className="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-indigo-600 transition"
+                    className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-900 transition"
                   >
                     {note.isPinned ? "★" : "☆"}
                   </button>
@@ -117,7 +117,7 @@ export function NoteList({
                       if (confirm(t.confirmDelete)) onDeleteNote(note.id);
                     }}
                     title={t.delete}
-                    className="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-red-500 transition font-bold"
+                    className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-red-600 transition font-bold"
                   >
                     ×
                   </button>

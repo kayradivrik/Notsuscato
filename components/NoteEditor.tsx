@@ -109,8 +109,8 @@ export function NoteEditor({
 
   if (!note) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center bg-white text-slate-400 text-sm select-none">
-        <p className="text-slate-400 font-medium">{t.noNotes}</p>
+      <div className="flex-1 flex flex-col items-center justify-center bg-white text-zinc-400 text-sm select-none">
+        <p className="text-zinc-400 font-medium">{t.noNotes}</p>
       </div>
     );
   }
@@ -129,16 +129,16 @@ export function NoteEditor({
   const charCount = body.length;
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-white text-slate-800">
+    <div className="flex-1 flex flex-col h-full bg-white text-zinc-800">
       {/* Top action bar */}
-      <div className="px-8 py-3 border-b border-slate-200/80 flex items-center justify-between text-xs text-slate-600 select-none bg-white">
+      <div className="px-8 py-3 border-b border-zinc-200/80 flex items-center justify-between text-xs text-zinc-600 select-none bg-white">
         <div className="flex items-center gap-3">
           <span
             className={`font-semibold ${
               status === "saving"
-                ? "text-indigo-600"
+                ? "text-zinc-600"
                 : status === "unsaved"
-                ? "text-amber-500"
+                ? "text-amber-600"
                 : "text-emerald-600"
             }`}
           >
@@ -148,12 +148,12 @@ export function NoteEditor({
           <button
             onClick={handleTtlCycle}
             title="Süreyi değiştir"
-            className="bg-indigo-50 hover:bg-indigo-100 border border-indigo-200/80 text-indigo-700 font-medium px-3 py-1 rounded-xl text-xs transition cursor-pointer"
+            className="bg-zinc-100 hover:bg-zinc-200/80 border border-zinc-200 text-zinc-800 font-medium px-3 py-1 rounded-xl text-xs active:scale-[0.98] transition-all duration-150 cursor-pointer"
           >
             {t.ttl}: {ttlHours}h
           </button>
 
-          <span className="text-slate-400 text-xs">
+          <span className="text-zinc-400 text-xs">
             {wordCount} {t.words} • {charCount} {t.chars}
           </span>
         </div>
@@ -162,24 +162,24 @@ export function NoteEditor({
           <button
             type="button"
             onClick={() => exportNoteAsTxt(note)}
-            className="bg-slate-100 hover:bg-slate-200/80 text-slate-700 px-3 py-1 rounded-xl text-xs font-medium transition cursor-pointer"
+            className="bg-zinc-100 hover:bg-zinc-200/80 text-zinc-700 px-3 py-1 rounded-xl text-xs font-medium active:scale-[0.98] transition-all duration-150 cursor-pointer"
           >
             TXT
           </button>
           <button
             type="button"
             onClick={() => exportNoteAsZip(note)}
-            className="bg-slate-100 hover:bg-slate-200/80 text-slate-700 px-3 py-1 rounded-xl text-xs font-medium transition cursor-pointer"
+            className="bg-zinc-100 hover:bg-zinc-200/80 text-zinc-700 px-3 py-1 rounded-xl text-xs font-medium active:scale-[0.98] transition-all duration-150 cursor-pointer"
           >
             ZIP
           </button>
           <button
             type="button"
             onClick={() => onTogglePin(note)}
-            className={`px-3 py-1 rounded-xl text-xs font-medium transition cursor-pointer ${
+            className={`px-3 py-1 rounded-xl text-xs font-medium active:scale-[0.98] transition-all duration-150 cursor-pointer ${
               note.isPinned
-                ? "bg-indigo-100 text-indigo-800"
-                : "bg-slate-100 hover:bg-slate-200/80 text-slate-700"
+                ? "bg-zinc-900 text-white"
+                : "bg-zinc-100 hover:bg-zinc-200/80 text-zinc-700"
             }`}
           >
             {note.isPinned ? `★ ${t.unpin}` : `☆ ${t.pin}`}
@@ -189,7 +189,7 @@ export function NoteEditor({
             onClick={() => {
               if (confirm(t.confirmDelete)) onDelete(note.id);
             }}
-            className="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1 rounded-xl text-xs font-medium transition cursor-pointer"
+            className="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1 rounded-xl text-xs font-medium active:scale-[0.98] transition-all duration-150 cursor-pointer"
           >
             {t.delete}
           </button>
@@ -203,28 +203,28 @@ export function NoteEditor({
           value={title}
           onChange={(e) => handleTitleChange(e.target.value)}
           placeholder={`${t.untitled}...`}
-          className="w-full bg-transparent text-2xl font-bold text-slate-900 placeholder-slate-300 focus:outline-none mb-4 pb-2 border-b border-transparent focus:border-slate-200 transition tracking-tight"
+          className="w-full bg-transparent text-2xl font-bold text-zinc-900 placeholder-zinc-300 focus:outline-none mb-4 pb-2 border-b border-transparent focus:border-zinc-200 transition tracking-tight"
         />
 
         <textarea
           value={body}
           onChange={(e) => handleBodyChange(e.target.value)}
           placeholder="Not içeriğinizi buraya yazın..."
-          className="flex-1 w-full bg-transparent resize-none text-slate-800 placeholder-slate-300 focus:outline-none leading-relaxed text-sm font-normal"
+          className="flex-1 w-full bg-transparent resize-none text-zinc-800 placeholder-zinc-300 focus:outline-none leading-relaxed text-sm font-normal"
         />
       </div>
 
-      {/* Bottom Status Bar */}
-      <div className="px-8 py-2.5 border-t border-slate-100 text-xs text-slate-400 bg-slate-50/60 flex items-center justify-between select-none">
+      {/* Bottom Forensic Status Bar */}
+      <div className="px-8 py-2.5 border-t border-zinc-100 text-xs text-zinc-400 bg-zinc-50/50 flex items-center justify-between select-none">
         <div className="truncate max-w-md">
-          <span>{t.ipAddress}: <strong className="text-slate-600 font-medium">{note.createdIp || "127.0.0.1"}</strong></span>
-          <span className="mx-2 text-slate-300">•</span>
+          <span>{t.ipAddress}: <strong className="text-zinc-600 font-medium">{note.createdIp || "127.0.0.1"}</strong></span>
+          <span className="mx-2 text-zinc-300">•</span>
           <span className="truncate" title={note.userAgent || ""}>
             {t.device}: {note.userAgent ? note.userAgent.slice(0, 40) + "..." : "-"}
           </span>
         </div>
         <div>
-          <span>{t.expiresAt}: <strong className="text-slate-600 font-medium">{formatShortTime(note.expiresAt)}</strong></span>
+          <span>{t.expiresAt}: <strong className="text-zinc-600 font-medium">{formatShortTime(note.expiresAt)}</strong></span>
         </div>
       </div>
     </div>
