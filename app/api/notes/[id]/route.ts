@@ -33,9 +33,18 @@ export async function PUT(
       return NextResponse.json({ error: "Not bulunamadı." }, { status: 404 });
     }
 
+    const updateData: Record<string, unknown> = {};
+    if (parsed.data.titleCiphertext !== undefined) updateData.titleCiphertext = parsed.data.titleCiphertext;
+    if (parsed.data.bodyCiphertext !== undefined) updateData.bodyCiphertext = parsed.data.bodyCiphertext;
+    if (parsed.data.iv !== undefined) updateData.iv = parsed.data.iv;
+    if (parsed.data.isPinned !== undefined) updateData.isPinned = parsed.data.isPinned;
+    if (parsed.data.expiresInHours !== undefined) {
+      updateData.expiresAt = new Date(Date.now() + parsed.data.expiresInHours * 60 * 60 * 1000);
+    }
+
     const updatedNote = await prisma.note.update({
       where: { id },
-      data: parsed.data,
+      data: updateData,
     });
 
     return NextResponse.json({ note: updatedNote });
@@ -73,4 +82,3 @@ export async function DELETE(
 
   return NextResponse.json({ success: true });
 }
-

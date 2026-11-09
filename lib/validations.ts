@@ -38,5 +38,5 @@ export const noteSchema = z.object({
   bodyCiphertext: z.string().default(""),
   iv: z.string().min(12, "Geçersiz IV (Initialization Vector)."),
   isPinned: z.boolean().default(false),
+  expiresInHours: z.number().min(1).max(24).optional().default(24),
 });
-

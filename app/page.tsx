@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { AuthModal } from "@/components/AuthModal";
-import { NoteList, DecryptedNote } from "@/components/NoteList";
+import { NoteList } from "@/components/NoteList";
 import { NoteEditor } from "@/components/NoteEditor";
+import { DecryptedNote } from "@/lib/export";
 import {
   encryptText,
   decryptText,
@@ -22,6 +23,9 @@ interface EncryptedNoteRecord {
   bodyCiphertext: string;
   iv: string;
   isPinned: boolean;
+  createdIp?: string;
+  userAgent?: string;
+  expiresAt?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -95,6 +99,9 @@ export default function Home() {
             body,
             iv: n.iv,
             isPinned: n.isPinned,
+            createdIp: n.createdIp,
+            userAgent: n.userAgent,
+            expiresAt: n.expiresAt,
             createdAt: n.createdAt,
             updatedAt: n.updatedAt,
           };
@@ -116,7 +123,7 @@ export default function Home() {
     }
   }, [cryptoKey, fetchAndDecryptNotes]);
 
-  const handleCreateNote = async () => {
+  const handleCreateNote = async (initialHours: number = 24) => {
     if (!cryptoKey) return;
 
     try {
@@ -133,6 +140,7 @@ export default function Home() {
           bodyCiphertext,
           iv,
           isPinned: false,
+          expiresInHours: initialHours,
         }),
       });
 
@@ -145,6 +153,9 @@ export default function Home() {
         body: defaultBody,
         iv: data.note.iv,
         isPinned: data.note.isPinned,
+        createdIp: data.note.createdIp,
+        userAgent: data.note.userAgent,
+        expiresAt: data.note.expiresAt,
         createdAt: data.note.createdAt,
         updatedAt: data.note.updatedAt,
       };
@@ -160,31 +171,44 @@ export default function Home() {
     id: string,
     newTitle: string,
     newBody: string,
-    isPinned: boolean
+    isPinned: boolean,
+    expiresInHours?: number
   ) => {
     if (!cryptoKey) return;
 
     const { ciphertext: titleCiphertext, iv } = await encryptText(newTitle, cryptoKey);
     const { ciphertext: bodyCiphertext } = await encryptText(newBody, cryptoKey);
 
+    const payload: Record<string, unknown> = {
+      titleCiphertext,
+      bodyCiphertext,
+      iv,
+      isPinned,
+    };
+    if (expiresInHours) payload.expiresInHours = expiresInHours;
+
     const res = await fetch(`/api/notes/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        titleCiphertext,
-        bodyCiphertext,
-        iv,
-        isPinned,
-      }),
+      body: JSON.stringify(payload),
     });
 
     if (!res.ok) throw new Error("Kaydedilemedi");
 
+    const data = await res.json();
+    const updatedRecord = data.note;
     const now = new Date().toISOString();
+
     setNotes((prev) =>
       prev.map((n) =>
         n.id === id
-          ? { ...n, title: newTitle, body: newBody, updatedAt: now }
+          ? {
+              ...n,
+              title: newTitle,
+              body: newBody,
+              updatedAt: now,
+              expiresAt: updatedRecord?.expiresAt || n.expiresAt,
+            }
           : n
       )
     );
@@ -245,32 +269,11 @@ export default function Home() {
     setNeedsUnlock(false);
   };
 
-  // Dışa aktar (Decrypted backup JSON)
-  const handleExport = () => {
-    if (notes.length === 0) return;
-    const exportData = notes.map((n) => ({
-      baslik: n.title,
-      icerik: n.body,
-      sabit: n.isPinned,
-      tarih: n.updatedAt,
-    }));
-    const blob = new Blob([JSON.stringify(exportData, null, 2)], {
-      type: "application/json",
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `notlar-${user?.username || "yedek"}-${new Date().toISOString().slice(0, 10)}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  // Global kısayol (Ctrl+N / Cmd+N ile yeni not)
   useEffect(() => {
     const handleGlobalKey = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "n") {
         e.preventDefault();
-        handleCreateNote();
+        handleCreateNote(24);
       }
     };
     window.addEventListener("keydown", handleGlobalKey);
@@ -312,18 +315,11 @@ export default function Home() {
         <div className="flex items-center gap-2">
           <span className="font-bold text-zinc-100 tracking-wider">NOTLAR</span>
           <span className="text-zinc-700">/</span>
-          <span className="text-zinc-500">e2ee</span>
+          <span className="text-zinc-500">süreli e2ee</span>
         </div>
 
         <div className="flex items-center gap-3">
           <span className="text-zinc-500">@{user.username}</span>
-          <button
-            onClick={handleExport}
-            title="Tüm notları JSON olarak indir"
-            className="text-zinc-500 hover:text-zinc-300 transition"
-          >
-            [dışa aktar]
-          </button>
           <button
             onClick={handleLockVault}
             className="text-zinc-500 hover:text-zinc-300 transition"
@@ -347,7 +343,7 @@ export default function Home() {
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           onSelectNote={(note) => setActiveNoteId(note.id)}
-          onCreateNote={handleCreateNote}
+          onCreateNote={() => handleCreateNote(24)}
           onDeleteNote={handleDeleteNote}
           onTogglePin={handleTogglePin}
         />
