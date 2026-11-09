@@ -58,9 +58,9 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
       <div className="relative w-full max-w-sm bg-white border border-slate-200/90 rounded-2xl shadow-[0_10px_35px_-4px_rgba(15,23,42,0.08)] p-8 space-y-6">
         {/* Top bar with wordmark & language switcher */}
         <div className="flex items-center justify-between">
-          <div>
-            <span className="text-xl font-bold tracking-tight text-slate-900">
-              notsuscato<span className="text-indigo-600">.</span>
+          <div className="flex items-center cursor-pointer group" title="notsuscato">
+            <span className="text-xl font-bold tracking-tight text-slate-900 group-hover:text-indigo-600 transition-colors duration-150">
+              notsuscato<span className="text-indigo-600 group-hover:text-indigo-500 inline-block transition-transform duration-150 group-hover:scale-125 origin-bottom">.</span>
             </span>
           </div>
 

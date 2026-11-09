@@ -231,9 +231,13 @@ export default function Home() {
       {/* Top Header */}
       <header className="h-13 border-b border-slate-200/80 px-6 flex items-center justify-between bg-white select-none shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
         <div className="flex items-center gap-4">
-          <div className="flex items-center">
-            <span className="font-bold text-base tracking-tight text-slate-900">
-              notsuscato<span className="text-indigo-600">.</span>
+          <div
+            onClick={() => setActiveNoteId(null)}
+            className="flex items-center cursor-pointer group py-1"
+            title="notsuscato"
+          >
+            <span className="font-bold text-base tracking-tight text-slate-900 group-hover:text-indigo-600 transition-colors duration-150">
+              notsuscato<span className="text-indigo-600 group-hover:text-indigo-500 inline-block transition-transform duration-150 group-hover:translate-x-0.5">.</span>
             </span>
           </div>
 
