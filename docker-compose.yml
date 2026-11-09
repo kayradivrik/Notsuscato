@@ -1,0 +1,15 @@
+services:
+  notsuscato:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: notsuscato_app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=file:./dev.db
+      - JWT_SECRET=${JWT_SECRET:-super-secret-random-key-change-in-production-vault-notes-32chars}
+      - ADMIN_SECRET_KEY=${ADMIN_SECRET_KEY:-admin2026}
+    volumes:
+      - ./prisma:/app/prisma

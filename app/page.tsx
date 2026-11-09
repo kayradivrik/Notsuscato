@@ -210,7 +210,7 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#fbfbfd] text-zinc-400 text-sm">
+      <div className="flex h-screen items-center justify-center bg-slate-50 text-slate-400 text-sm">
         {t.saving}
       </div>
     );
@@ -227,28 +227,25 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-[#fcfcfd] text-zinc-800">
+    <div className="flex flex-col h-screen w-screen overflow-hidden bg-slate-50 text-slate-800">
       {/* Top Header */}
-      <header className="h-12 border-b border-zinc-200/90 px-5 flex items-center justify-between bg-white select-none shadow-2xs">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-orange-500 text-white font-bold flex items-center justify-center text-xs shadow-xs">
-              N
-            </div>
-            <span className="font-bold text-sm tracking-tight text-zinc-900">
-              {t.appName}
+      <header className="h-13 border-b border-slate-200/80 px-6 flex items-center justify-between bg-white select-none shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center">
+            <span className="font-bold text-base tracking-tight text-slate-900">
+              notsuscato<span className="text-indigo-600">.</span>
             </span>
           </div>
 
-          <div className="flex gap-1 bg-zinc-100 p-0.5 rounded-md text-[10px]">
+          <div className="flex gap-1 bg-slate-100 p-0.5 rounded-lg text-[10px]">
             {languages.map((l) => (
               <button
                 key={l}
                 onClick={() => handleLanguageChange(l)}
-                className={`px-1.5 py-0.5 rounded uppercase font-semibold transition cursor-pointer ${
+                className={`px-2 py-0.5 rounded-md uppercase font-semibold transition cursor-pointer ${
                   lang === l
-                    ? "bg-white text-orange-600 shadow-2xs"
-                    : "text-zinc-500 hover:text-zinc-800"
+                    ? "bg-white text-indigo-600 shadow-xs"
+                    : "text-slate-500 hover:text-slate-800"
                 }`}
               >
                 {l}
@@ -258,12 +255,12 @@ export default function Home() {
         </div>
 
         <div className="flex items-center gap-3">
-          <span className="text-xs text-zinc-600 font-medium">@{user.username}</span>
+          <span className="text-xs text-slate-600 font-medium">@{user.username}</span>
 
           {user.role === "ADMIN" && (
             <button
               onClick={() => setShowAdminModal(true)}
-              className="bg-orange-50 hover:bg-orange-100 border border-orange-200 text-orange-700 font-semibold px-2.5 py-1 rounded-lg text-xs transition cursor-pointer"
+              className="bg-indigo-50 hover:bg-indigo-100 border border-indigo-200/80 text-indigo-700 font-medium px-2.5 py-1 rounded-xl text-xs transition cursor-pointer"
             >
               {t.adminPanel}
             </button>
@@ -271,7 +268,7 @@ export default function Home() {
 
           <button
             onClick={handleLogout}
-            className="text-zinc-500 hover:text-red-600 hover:bg-zinc-100 px-2.5 py-1 rounded-lg text-xs transition cursor-pointer"
+            className="text-slate-500 hover:text-red-600 hover:bg-slate-50 px-2.5 py-1 rounded-xl text-xs transition cursor-pointer"
           >
             {t.logout}
           </button>

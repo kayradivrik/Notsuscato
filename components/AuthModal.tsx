@@ -49,34 +49,31 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
   const languages: Language[] = ["tr", "en", "de", "ru"];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gradient-to-br from-orange-50/60 via-[#fafafb] to-orange-100/30">
-      {/* Background Decorative Circles */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-200/25 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-amber-200/20 rounded-full blur-3xl pointer-events-none" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gradient-to-b from-slate-50 via-slate-100/70 to-slate-200/50">
+      {/* Background Subtle Gradient Blobs for warmth */}
+      <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-indigo-200/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/3 w-96 h-96 bg-blue-100/30 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Auth Card */}
-      <div className="relative w-full max-w-sm bg-white border border-zinc-200/90 rounded-2xl shadow-xl shadow-zinc-950/5 p-7 space-y-6">
-        {/* Header & Language Switcher */}
+      {/* Card */}
+      <div className="relative w-full max-w-sm bg-white border border-slate-200/90 rounded-2xl shadow-[0_10px_35px_-4px_rgba(15,23,42,0.08)] p-8 space-y-6">
+        {/* Top bar with wordmark & language switcher */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-orange-500 text-white font-bold flex items-center justify-center text-sm shadow-sm">
-              N
-            </div>
-            <span className="font-bold text-base text-zinc-900 tracking-tight">
-              {t.appName}
+          <div>
+            <span className="text-xl font-bold tracking-tight text-slate-900">
+              notsuscato<span className="text-indigo-600">.</span>
             </span>
           </div>
 
-          <div className="flex gap-1 bg-zinc-100/90 p-1 rounded-lg">
+          <div className="flex gap-1 bg-slate-100 p-1 rounded-xl">
             {languages.map((l) => (
               <button
                 key={l}
                 type="button"
                 onClick={() => onLanguageChange(l)}
-                className={`px-1.5 py-0.5 rounded text-[10px] font-semibold uppercase transition ${
+                className={`px-2 py-0.5 rounded-lg text-[10px] font-semibold uppercase transition cursor-pointer ${
                   lang === l
-                    ? "bg-white text-orange-600 shadow-xs"
-                    : "text-zinc-500 hover:text-zinc-800"
+                    ? "bg-white text-indigo-600 shadow-xs"
+                    : "text-slate-500 hover:text-slate-900"
                 }`}
               >
                 {l}
@@ -85,26 +82,26 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
           </div>
         </div>
 
-        {/* Title */}
+        {/* Title & friendly intro */}
         <div className="space-y-1">
-          <h2 className="text-lg font-bold text-zinc-900">
+          <h2 className="text-lg font-semibold text-slate-900 tracking-tight">
             {isRegister ? t.registerTitle : t.loginTitle}
           </h2>
-          <p className="text-xs text-zinc-500 leading-relaxed">
+          <p className="text-xs text-slate-500 leading-relaxed">
             {t.authNotice}
           </p>
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200/80 rounded-lg p-2.5 text-xs text-red-600 text-center font-medium">
+          <div className="bg-red-50 border border-red-200/80 rounded-xl p-3 text-xs text-red-600 font-medium text-center">
             {error}
           </div>
         )}
 
-        {/* Form */}
+        {/* Inputs Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-zinc-700 mb-1.5">
+            <label className="block text-xs font-medium text-slate-700 mb-1.5">
               {t.username}
             </label>
             <input
@@ -114,12 +111,12 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="kullanici_adi"
-              className="w-full bg-zinc-50/60 border border-zinc-300 rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:bg-white focus:outline-none focus:border-orange-500 focus:ring-3 focus:ring-orange-500/15 transition"
+              className="w-full bg-slate-50/70 border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-zinc-700 mb-1.5">
+            <label className="block text-xs font-medium text-slate-700 mb-1.5">
               {t.password}
             </label>
             <input
@@ -128,7 +125,7 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full bg-zinc-50/60 border border-zinc-300 rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:bg-white focus:outline-none focus:border-orange-500 focus:ring-3 focus:ring-orange-500/15 transition"
+              className="w-full bg-slate-50/70 border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition"
             />
           </div>
 
@@ -138,13 +135,13 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
                 <button
                   type="button"
                   onClick={() => setShowAdminKey(true)}
-                  className="text-xs text-zinc-500 hover:text-orange-600 transition"
+                  className="text-xs text-slate-400 hover:text-indigo-600 transition cursor-pointer"
                 >
                   + {t.adminKey}
                 </button>
               ) : (
                 <div className="space-y-1">
-                  <label className="block text-xs font-semibold text-zinc-700">
+                  <label className="block text-xs font-medium text-slate-700">
                     {t.adminKey}
                   </label>
                   <input
@@ -152,7 +149,7 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
                     value={adminKey}
                     onChange={(e) => setAdminKey(e.target.value)}
                     placeholder="secret"
-                    className="w-full bg-zinc-50/60 border border-zinc-300 rounded-lg px-3 py-1.5 text-xs text-zinc-900 placeholder-zinc-400 focus:bg-white focus:outline-none focus:border-orange-500 focus:ring-3 focus:ring-orange-500/15 transition"
+                    className="w-full bg-slate-50/70 border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition"
                   />
                 </div>
               )}
@@ -162,14 +159,14 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-semibold py-2.5 rounded-lg shadow-sm hover:shadow transition disabled:opacity-50 text-sm cursor-pointer"
+            className="w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-medium py-2.5 rounded-xl shadow-xs transition disabled:opacity-50 text-sm cursor-pointer"
           >
             {loading ? t.saving : isRegister ? t.registerBtn : t.loginBtn}
           </button>
         </form>
 
-        {/* Toggle Account Mode */}
-        <div className="border-t border-zinc-100 pt-3 text-center text-xs text-zinc-600">
+        {/* Toggle between Login and Register */}
+        <div className="border-t border-slate-100 pt-4 text-center text-xs text-slate-500">
           <span>{isRegister ? t.hasAccount : t.noAccount} </span>
           <button
             type="button"
@@ -177,14 +174,14 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
               setIsRegister(!isRegister);
               setError(null);
             }}
-            className="text-orange-600 hover:text-orange-700 font-semibold ml-1 cursor-pointer"
+            className="text-indigo-600 hover:text-indigo-700 font-semibold ml-1 cursor-pointer"
           >
             {isRegister ? t.signIn : t.signUp}
           </button>
         </div>
 
         {/* Legal Disclaimer */}
-        <p className="text-[10px] text-zinc-400 text-center leading-relaxed">
+        <p className="text-[10px] text-slate-400 text-center leading-relaxed">
           {t.legalDisclaimer}
         </p>
       </div>
