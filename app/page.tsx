@@ -5,7 +5,8 @@ import { AuthModal } from "@/components/AuthModal";
 import { NoteList } from "@/components/NoteList";
 import { NoteEditor } from "@/components/NoteEditor";
 import { AdminModal } from "@/components/AdminModal";
-import { ProfileModal, UserProfile } from "@/components/ProfileModal";
+import { ProfilePage } from "@/components/ProfilePage";
+import { UserProfile } from "@/components/ProfileModal";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { DecryptedNote } from "@/lib/export";
 import { Language, translations } from "@/lib/i18n";
@@ -18,7 +19,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [showAdminModal, setShowAdminModal] = useState(false);
-  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [currentView, setCurrentView] = useState<"notes" | "profile">("notes");
   const [noteToDelete, setNoteToDelete] = useState<DecryptedNote | null>(null);
 
   const t = translations[lang];
@@ -224,6 +225,20 @@ export default function Home() {
     );
   }
 
+  if (currentView === "profile") {
+    return (
+      <ProfilePage
+        user={user}
+        lang={lang}
+        onBack={() => setCurrentView("notes")}
+        onUpdateUser={(updated) =>
+          setUser((prev) => (prev ? { ...prev, ...updated } : null))
+        }
+        onLogout={handleLogout}
+      />
+    );
+  }
+
   const theme = user.theme || "clean";
   const isDark = theme === "dark";
   const isSepia = theme === "sepia";
@@ -317,7 +332,7 @@ export default function Home() {
           {/* Profile Circle Avatar / SVG Button */}
           <button
             type="button"
-            onClick={() => setShowProfileModal(true)}
+            onClick={() => setCurrentView("profile")}
             title={t.manageProfile}
             className="w-8 h-8 rounded-full bg-zinc-900 hover:bg-zinc-800 text-white flex items-center justify-center border border-zinc-700/80 shadow-2xs active:scale-95 transition-all duration-150 cursor-pointer overflow-hidden group shrink-0"
           >
@@ -383,18 +398,6 @@ export default function Home() {
         }}
         onCancel={() => setNoteToDelete(null)}
       />
-
-      {/* Profile Management Modal */}
-      {showProfileModal && (
-        <ProfileModal
-          user={user}
-          lang={lang}
-          onClose={() => setShowProfileModal(false)}
-          onUpdateUser={(updated) =>
-            setUser((prev) => (prev ? { ...prev, ...updated } : null))
-          }
-        />
-      )}
 
       {/* Admin Panel Overlay */}
       {showAdminModal && (

@@ -118,7 +118,6 @@ export function NoteEditor({
 
   let containerBg = "bg-white text-zinc-900";
   let headerBg = "bg-white border-zinc-200/80 text-zinc-600";
-  let footerBg = "bg-zinc-50/50 border-zinc-100 text-zinc-400";
   let titleColor = "text-zinc-900 placeholder-zinc-300";
   let bodyColor = "text-zinc-800 placeholder-zinc-300";
   let btnBg = "bg-zinc-100 hover:bg-zinc-200/80 text-zinc-700";
@@ -126,21 +125,18 @@ export function NoteEditor({
   if (isDark) {
     containerBg = "bg-[#09090b] text-zinc-100";
     headerBg = "bg-[#111114] border-zinc-800 text-zinc-400";
-    footerBg = "bg-[#111114] border-zinc-800 text-zinc-500";
     titleColor = "text-zinc-100 placeholder-zinc-700";
     bodyColor = "text-zinc-200 placeholder-zinc-700";
     btnBg = "bg-zinc-850 hover:bg-zinc-800 text-zinc-200 border border-zinc-800";
   } else if (isSepia) {
     containerBg = "bg-[#fcf8ed] text-[#3e382d]";
     headerBg = "bg-[#f5efde] border-[#e2d8c3] text-[#6b6251]";
-    footerBg = "bg-[#f5efde] border-[#e2d8c3] text-[#8c826e]";
     titleColor = "text-[#2e2920] placeholder-[#b3a895]";
     bodyColor = "text-[#3e382d] placeholder-[#b3a895]";
     btnBg = "bg-[#efe5ce] hover:bg-[#e4dac0] text-[#4d4434]";
   } else if (isGlass) {
     containerBg = "bg-white/60 backdrop-blur-xl text-zinc-900 relative overflow-hidden";
     headerBg = "bg-white/70 backdrop-blur-md border-zinc-200/60 text-zinc-600";
-    footerBg = "bg-white/70 backdrop-blur-md border-zinc-200/60 text-zinc-500";
     titleColor = "text-zinc-900 placeholder-zinc-400";
     bodyColor = "text-zinc-800 placeholder-zinc-400";
     btnBg = "bg-white/80 hover:bg-white text-zinc-700 border border-zinc-200/60";
@@ -153,16 +149,6 @@ export function NoteEditor({
       </div>
     );
   }
-
-  const formatShortTime = (iso?: string) => {
-    if (!iso) return "-";
-    try {
-      const d = new Date(iso);
-      return `${d.toLocaleDateString("tr-TR")} ${d.toLocaleTimeString("tr-TR")}`;
-    } catch {
-      return iso;
-    }
-  };
 
   const wordCount = body.trim() ? body.trim().split(/\s+/).length : 0;
   const charCount = body.length;
@@ -304,22 +290,6 @@ export function NoteEditor({
           placeholder="Not içeriğinizi buraya yazın..."
           className={`flex-1 w-full bg-transparent resize-none ${bodyColor} focus:outline-none leading-relaxed text-sm font-normal`}
         />
-      </div>
-
-      {/* Bottom Forensic Status Bar */}
-      <div
-        className={`relative z-10 px-8 py-2.5 border-t text-xs flex items-center justify-between select-none transition-colors ${footerBg}`}
-      >
-        <div className="truncate max-w-md">
-          <span>{t.ipAddress}: <strong className="font-medium text-zinc-600 dark:text-zinc-400">{note.createdIp || "127.0.0.1"}</strong></span>
-          <span className="mx-2 opacity-40">•</span>
-          <span className="truncate" title={note.userAgent || ""}>
-            {t.device}: {note.userAgent ? note.userAgent.slice(0, 40) + "..." : "-"}
-          </span>
-        </div>
-        <div>
-          <span>{t.expiresAt}: <strong className="font-medium text-zinc-600 dark:text-zinc-400">{formatShortTime(note.expiresAt)}</strong></span>
-        </div>
       </div>
     </div>
   );
