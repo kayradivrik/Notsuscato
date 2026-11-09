@@ -108,22 +108,22 @@ export function AdminModal({ lang, onClose }: AdminModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-zinc-950/40 backdrop-blur-xs p-4 sm:p-8">
+    <div className="fixed inset-0 z-50 flex flex-col bg-zinc-950/40 backdrop-blur-xs p-2 sm:p-8">
       <div className="flex-1 flex flex-col bg-white border border-zinc-200/90 rounded-2xl shadow-2xl overflow-hidden max-w-6xl w-full mx-auto">
         {/* Top Header */}
-        <div className="h-14 border-b border-zinc-200/80 px-6 flex items-center justify-between select-none bg-zinc-50/70">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1.5">
+        <div className="h-14 border-b border-zinc-200/80 px-3 sm:px-6 flex items-center justify-between select-none bg-zinc-50/70 gap-2">
+          <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+            <div className="flex items-center gap-1.5 shrink-0">
               <span className="w-2 h-2 rounded-full bg-zinc-900" />
-              <span className="font-bold text-zinc-900 text-sm tracking-tight">
+              <span className="font-bold text-zinc-900 text-xs sm:text-sm tracking-tight truncate">
                 {t.adminPanel}
               </span>
             </div>
-            <span className="text-zinc-300">|</span>
-            <div className="flex gap-1 bg-zinc-100 p-1 rounded-xl text-xs">
+            <span className="text-zinc-300 hidden sm:inline">|</span>
+            <div className="flex gap-1 bg-zinc-100 p-0.5 sm:p-1 rounded-xl text-[11px] sm:text-xs shrink-0">
               <button
                 onClick={() => setTab("notes")}
-                className={`px-3 py-1 rounded-lg font-medium transition cursor-pointer ${
+                className={`px-2 sm:px-3 py-1 rounded-lg font-medium transition cursor-pointer ${
                   tab === "notes"
                     ? "bg-white text-zinc-900 shadow-xs font-semibold"
                     : "text-zinc-500 hover:text-zinc-900"
@@ -133,7 +133,7 @@ export function AdminModal({ lang, onClose }: AdminModalProps) {
               </button>
               <button
                 onClick={() => setTab("users")}
-                className={`px-3 py-1 rounded-lg font-medium transition cursor-pointer ${
+                className={`px-2 sm:px-3 py-1 rounded-lg font-medium transition cursor-pointer ${
                   tab === "users"
                     ? "bg-white text-zinc-900 shadow-xs font-semibold"
                     : "text-zinc-500 hover:text-zinc-900"
@@ -144,17 +144,17 @@ export function AdminModal({ lang, onClose }: AdminModalProps) {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t.searchPlaceholder}
-              className="bg-white border border-zinc-200 rounded-xl px-3 py-1.5 text-zinc-800 placeholder-zinc-400 focus:outline-none focus:border-zinc-400 text-xs w-52"
+              className="bg-white border border-zinc-200 rounded-xl px-2.5 sm:px-3 py-1.5 text-zinc-800 placeholder-zinc-400 focus:outline-none focus:border-zinc-400 text-xs w-24 sm:w-52"
             />
             <button
               onClick={onClose}
-              className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 px-3 py-1.5 rounded-xl text-xs font-medium active:scale-[0.98] transition cursor-pointer"
+              className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-medium active:scale-[0.98] transition cursor-pointer"
             >
               {t.close}
             </button>
@@ -162,7 +162,7 @@ export function AdminModal({ lang, onClose }: AdminModalProps) {
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-y-auto p-6 bg-white">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-6 bg-white">
           {loading ? (
             <div className="p-12 text-center text-zinc-400 text-sm">{t.saving}</div>
           ) : tab === "notes" ? (

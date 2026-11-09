@@ -69,7 +69,7 @@ export function NoteList({
     : "bg-zinc-900 hover:bg-zinc-800 text-white";
 
   return (
-    <aside className={`w-72 flex flex-col h-full text-xs select-none shrink-0 overflow-hidden transition-colors ${asideBg}`}>
+    <aside className={`w-full md:w-72 md:shrink-0 flex flex-col h-full text-xs select-none overflow-hidden transition-colors ${asideBg}`}>
       {/* Top search & create */}
       <div className={`p-3 border-b flex items-center gap-2 ${isDark ? "border-zinc-800" : isSepia ? "border-[#e2d8c3]" : "border-zinc-200/80"}`}>
         <input

@@ -20,6 +20,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [currentView, setCurrentView] = useState<"notes" | "profile">("notes");
+  const [mobileTab, setMobileTab] = useState<"list" | "editor">("list");
   const [noteToDelete, setNoteToDelete] = useState<DecryptedNote | null>(null);
 
   const t = translations[lang];
@@ -158,6 +159,7 @@ export default function Home() {
         const remaining = prev.filter((n) => n.id !== id);
         if (activeNoteId === id) {
           setActiveNoteId(remaining.length > 0 ? remaining[0].id : null);
+          if (remaining.length === 0) setMobileTab("list");
         }
         return remaining;
       });
@@ -263,26 +265,29 @@ export default function Home() {
     : "bg-white text-zinc-900 shadow-2xs";
 
   return (
-    <div className={`flex flex-col h-screen w-screen overflow-hidden transition-colors ${wrapperBg}`}>
+    <div className={`flex flex-col h-[100dvh] w-screen overflow-hidden transition-colors ${wrapperBg}`}>
       {/* Top Header */}
-      <header className={`h-13 border-b px-6 flex items-center justify-between select-none transition-colors ${headerBg}`}>
-        <div className="flex items-center gap-4">
+      <header className={`h-13 border-b px-3 sm:px-6 flex items-center justify-between select-none transition-colors shrink-0 ${headerBg}`}>
+        <div className="flex items-center gap-2 sm:gap-4 min-w-0">
           <div
-            onClick={() => setActiveNoteId(null)}
-            className="flex items-center cursor-pointer group py-1"
+            onClick={() => {
+              setActiveNoteId(null);
+              setMobileTab("list");
+            }}
+            className="flex items-center cursor-pointer group py-1 shrink-0"
             title="notsuscato"
           >
-            <span className={`font-bold text-base tracking-tight transition-colors ${isDark ? "text-white group-hover:text-zinc-400" : "text-zinc-900 group-hover:text-zinc-600"}`}>
+            <span className={`font-bold text-sm sm:text-base tracking-tight transition-colors ${isDark ? "text-white group-hover:text-zinc-400" : "text-zinc-900 group-hover:text-zinc-600"}`}>
               notsuscato<span className="text-zinc-400 group-hover:text-zinc-900 inline-block transition-colors">.</span>
             </span>
           </div>
 
-          <div className={`flex gap-1 p-0.5 rounded-lg text-[10px] ${langContainerBg}`}>
+          <div className={`flex gap-0.5 sm:gap-1 p-0.5 rounded-lg text-[9px] sm:text-[10px] shrink-0 ${langContainerBg}`}>
             {languages.map((l) => (
               <button
                 key={l}
                 onClick={() => handleLanguageChange(l)}
-                className={`px-2 py-0.5 rounded-md uppercase font-semibold transition cursor-pointer ${
+                className={`px-1.5 sm:px-2 py-0.5 rounded-md uppercase font-semibold transition cursor-pointer ${
                   lang === l
                     ? langActiveBg
                     : isDark
@@ -298,15 +303,15 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <span className={`text-xs font-medium ${isDark ? "text-zinc-400" : isSepia ? "text-[#6b6251]" : "text-zinc-600"}`}>
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <span className={`hidden sm:inline-block text-xs font-medium ${isDark ? "text-zinc-400" : isSepia ? "text-[#6b6251]" : "text-zinc-600"}`}>
             @{user.username}
           </span>
 
           {user.role === "ADMIN" && (
             <button
               onClick={() => setShowAdminModal(true)}
-              className={`border font-medium px-2.5 py-1 rounded-xl text-xs active:scale-[0.98] transition-all duration-150 cursor-pointer ${
+              className={`border font-medium px-2 sm:px-2.5 py-1 rounded-xl text-[11px] sm:text-xs active:scale-[0.98] transition-all duration-150 cursor-pointer ${
                 isDark
                   ? "bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-zinc-200"
                   : isSepia
@@ -320,7 +325,7 @@ export default function Home() {
 
           <button
             onClick={handleLogout}
-            className={`px-2.5 py-1 rounded-xl text-xs active:scale-[0.98] transition-all duration-150 cursor-pointer ${
+            className={`hidden sm:inline-block px-2.5 py-1 rounded-xl text-xs active:scale-[0.98] transition-all duration-150 cursor-pointer ${
               isDark
                 ? "text-zinc-400 hover:text-red-400 hover:bg-zinc-800/60"
                 : "text-zinc-500 hover:text-red-600 hover:bg-zinc-50"
@@ -360,28 +365,50 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Main Workspace */}
-      <main className="flex-1 flex overflow-hidden min-w-0">
-        <NoteList
-          lang={lang}
-          notes={notes}
-          activeNoteId={activeNoteId}
-          searchQuery={searchQuery}
-          theme={theme}
-          onSearchChange={setSearchQuery}
-          onSelectNote={(note) => setActiveNoteId(note.id)}
-          onCreateNote={() => handleCreateNote(24)}
-          onRequestDelete={(note) => setNoteToDelete(note)}
-          onTogglePin={handleTogglePin}
-        />
-        <NoteEditor
-          lang={lang}
-          note={activeNote}
-          theme={theme}
-          onSave={handleSaveNote}
-          onRequestDelete={(note) => setNoteToDelete(note)}
-          onTogglePin={handleTogglePin}
-        />
+      {/* Main Workspace (Mobile Responsive Switcher) */}
+      <main className="flex-1 flex overflow-hidden min-w-0 relative">
+        {/* Sidebar NoteList: full-width on mobile when on "list", hidden when on "editor"; on desktop (md:) always visible */}
+        <div
+          className={`w-full md:w-72 md:shrink-0 h-full ${
+            mobileTab === "list" ? "flex flex-col" : "hidden md:flex md:flex-col"
+          }`}
+        >
+          <NoteList
+            lang={lang}
+            notes={notes}
+            activeNoteId={activeNoteId}
+            searchQuery={searchQuery}
+            theme={theme}
+            onSearchChange={setSearchQuery}
+            onSelectNote={(note) => {
+              setActiveNoteId(note.id);
+              setMobileTab("editor");
+            }}
+            onCreateNote={() => {
+              handleCreateNote(24);
+              setMobileTab("editor");
+            }}
+            onRequestDelete={(note) => setNoteToDelete(note)}
+            onTogglePin={handleTogglePin}
+          />
+        </div>
+
+        {/* NoteEditor: full-width on mobile when on "editor", hidden when on "list"; on desktop (md:) always visible */}
+        <div
+          className={`flex-1 h-full min-w-0 ${
+            mobileTab === "editor" ? "flex flex-col" : "hidden md:flex md:flex-col"
+          }`}
+        >
+          <NoteEditor
+            lang={lang}
+            note={activeNote}
+            theme={theme}
+            onSave={handleSaveNote}
+            onRequestDelete={(note) => setNoteToDelete(note)}
+            onTogglePin={handleTogglePin}
+            onBack={() => setMobileTab("list")}
+          />
+        </div>
       </main>
 
       {/* Custom Delete Confirmation Modal */}

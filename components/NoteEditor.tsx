@@ -17,6 +17,7 @@ interface NoteEditorProps {
   ) => Promise<void>;
   onRequestDelete: (note: DecryptedNote) => void;
   onTogglePin: (note: DecryptedNote) => void;
+  onBack?: () => void;
 }
 
 const TTL_OPTIONS = [2, 4, 6, 8, 12, 24];
@@ -28,6 +29,7 @@ export function NoteEditor({
   onSave,
   onRequestDelete,
   onTogglePin,
+  onBack,
 }: NoteEditorProps) {
   const t = translations[lang];
   const [title, setTitle] = useState("");
@@ -183,11 +185,25 @@ export function NoteEditor({
 
       {/* Top action bar */}
       <div
-        className={`relative z-10 px-6 py-3 border-b flex items-center justify-between text-xs select-none transition-colors gap-3 overflow-x-auto min-w-0 ${headerBg}`}
+        className={`relative z-10 px-3 sm:px-6 py-2.5 sm:py-3 border-b flex items-center justify-between text-xs select-none transition-colors gap-2 overflow-x-auto min-w-0 ${headerBg}`}
       >
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {onBack && (
+            <button
+              type="button"
+              onClick={onBack}
+              className="md:hidden flex items-center gap-1 font-semibold text-xs text-zinc-700 bg-zinc-100 hover:bg-zinc-200 px-2.5 py-1 rounded-xl active:scale-95 transition cursor-pointer shrink-0"
+              title={t.backToNotes}
+            >
+              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+              <span>{t.backToNotes}</span>
+            </button>
+          )}
+
           <span
-            className={`font-semibold ${
+            className={`font-semibold text-xs ${
               status === "saving"
                 ? "text-zinc-500"
                 : status === "unsaved"
@@ -283,7 +299,7 @@ export function NoteEditor({
 
       {/* Editor Content Area */}
       <div
-        className="relative z-10 flex-1 flex flex-col px-10 py-8 max-w-4xl w-full mx-auto overflow-hidden transition-all"
+        className="relative z-10 flex-1 flex flex-col px-4 sm:px-10 py-4 sm:py-8 max-w-4xl w-full mx-auto overflow-hidden transition-all"
         style={editorPatternStyle}
       >
         <input
@@ -291,7 +307,7 @@ export function NoteEditor({
           value={title}
           onChange={(e) => handleTitleChange(e.target.value)}
           placeholder={`${t.untitled}...`}
-          className={`w-full bg-transparent text-2xl font-bold ${titleColor} focus:outline-none mb-4 pb-2 border-b border-transparent focus:border-zinc-300/40 transition tracking-tight`}
+          className={`w-full bg-transparent text-xl sm:text-2xl font-bold ${titleColor} focus:outline-none mb-3 sm:mb-4 pb-2 border-b border-transparent focus:border-zinc-300/40 transition tracking-tight`}
         />
 
         <textarea
