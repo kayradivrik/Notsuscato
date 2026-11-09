@@ -109,27 +109,6 @@ export function NoteEditor({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [note, title, body, triggerSave]);
 
-  if (!note) {
-    return (
-      <div className="flex-1 flex flex-col items-center justify-center bg-white text-zinc-400 text-sm select-none">
-        <p className="text-zinc-400 font-medium">{t.noNotes}</p>
-      </div>
-    );
-  }
-
-  const formatShortTime = (iso?: string) => {
-    if (!iso) return "-";
-    try {
-      const d = new Date(iso);
-      return `${d.toLocaleDateString("tr-TR")} ${d.toLocaleTimeString("tr-TR")}`;
-    } catch {
-      return iso;
-    }
-  };
-
-  const wordCount = body.trim() ? body.trim().split(/\s+/).length : 0;
-  const charCount = body.length;
-
   // Theme configuration
   const isDark = theme === "dark";
   const isSepia = theme === "sepia";
@@ -167,6 +146,27 @@ export function NoteEditor({
     btnBg = "bg-white/80 hover:bg-white text-zinc-700 border border-zinc-200/60";
   }
 
+  if (!note) {
+    return (
+      <div className={`flex-1 flex flex-col items-center justify-center text-zinc-400 text-sm select-none min-w-0 ${containerBg}`}>
+        <p className="text-zinc-400 font-medium">{t.noNotes}</p>
+      </div>
+    );
+  }
+
+  const formatShortTime = (iso?: string) => {
+    if (!iso) return "-";
+    try {
+      const d = new Date(iso);
+      return `${d.toLocaleDateString("tr-TR")} ${d.toLocaleTimeString("tr-TR")}`;
+    } catch {
+      return iso;
+    }
+  };
+
+  const wordCount = body.trim() ? body.trim().split(/\s+/).length : 0;
+  const charCount = body.length;
+
   const editorPatternStyle: React.CSSProperties = isDots
     ? {
         backgroundImage: "radial-gradient(#d4d4d8 1.2px, transparent 1.2px)",
@@ -181,7 +181,7 @@ export function NoteEditor({
     : {};
 
   return (
-    <div className={`flex-1 flex flex-col h-full relative ${containerBg}`}>
+    <div className={`flex-1 flex flex-col h-full relative overflow-hidden min-w-0 ${containerBg}`}>
       {isGlass && (
         <video
           autoPlay
@@ -197,7 +197,7 @@ export function NoteEditor({
 
       {/* Top action bar */}
       <div
-        className={`relative z-10 px-8 py-3 border-b flex items-center justify-between text-xs select-none transition-colors ${headerBg}`}
+        className={`relative z-10 px-6 py-3 border-b flex items-center justify-between text-xs select-none transition-colors gap-3 overflow-x-auto min-w-0 ${headerBg}`}
       >
         <div className="flex items-center gap-3">
           <span

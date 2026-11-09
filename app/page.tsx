@@ -346,7 +346,7 @@ export default function Home() {
       </header>
 
       {/* Main Workspace */}
-      <main className="flex-1 flex overflow-hidden">
+      <main className="flex-1 flex overflow-hidden min-w-0">
         <NoteList
           lang={lang}
           notes={notes}

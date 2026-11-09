@@ -69,7 +69,7 @@ export function NoteList({
     : "bg-zinc-900 hover:bg-zinc-800 text-white";
 
   return (
-    <aside className={`w-64 flex flex-col h-full text-xs select-none shrink-0 transition-colors ${asideBg}`}>
+    <aside className={`w-72 flex flex-col h-full text-xs select-none shrink-0 overflow-hidden transition-colors ${asideBg}`}>
       {/* Top search & create */}
       <div className={`p-3 border-b flex items-center gap-2 ${isDark ? "border-zinc-800" : isSepia ? "border-[#e2d8c3]" : "border-zinc-200/80"}`}>
         <input
@@ -77,11 +77,11 @@ export function NoteList({
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder={t.searchPlaceholder}
-          className={`flex-1 border rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 text-xs transition ${searchInputStyle}`}
+          className={`flex-1 min-w-0 border rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 text-xs transition ${searchInputStyle}`}
         />
         <button
           onClick={onCreateNote}
-          className={`${createBtnStyle} active:scale-[0.98] font-medium px-3 py-1.5 rounded-xl shadow-2xs transition-all duration-150 cursor-pointer text-xs shrink-0`}
+          className={`${createBtnStyle} active:scale-[0.98] font-medium px-3 py-1.5 rounded-xl shadow-2xs transition-all duration-150 cursor-pointer text-xs shrink-0 whitespace-nowrap`}
         >
           {t.newNote}
         </button>
@@ -116,7 +116,7 @@ export function NoteList({
                 onClick={() => onSelectNote(note)}
                 className={`group mx-2 px-3 py-2.5 rounded-xl cursor-pointer flex items-center justify-between gap-1.5 transition ${itemActiveStyle}`}
               >
-                <div className="truncate flex-1">
+                <div className="truncate flex-1 min-w-0">
                   <span className="truncate block">
                     {note.isPinned && <span className="text-zinc-900 font-bold mr-1">•</span>}
                     {note.title.trim() || t.untitled}
