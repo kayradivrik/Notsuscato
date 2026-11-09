@@ -66,7 +66,13 @@ export async function POST(req: NextRequest) {
     const response = NextResponse.json(
       {
         success: true,
-        user: { id: user.id, username: user.username, role: user.role },
+        user: {
+          id: user.id,
+          username: user.username,
+          role: user.role,
+          avatar: user.avatar,
+          theme: user.theme,
+        },
       },
       { status: 201 }
     );

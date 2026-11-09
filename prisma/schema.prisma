@@ -12,6 +12,8 @@ model User {
   username     String   @unique
   passwordHash String
   role         String   @default("USER") // "ADMIN" or "USER"
+  avatar       String?
+  theme        String   @default("clean")
   lastIp       String?
   userAgent    String?
   createdAt    DateTime @default(now())
