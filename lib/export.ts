@@ -4,7 +4,6 @@ export interface DecryptedNote {
   id: string;
   title: string;
   body: string;
-  iv: string;
   isPinned: boolean;
   createdIp?: string;
   userAgent?: string;
@@ -63,13 +62,12 @@ export async function exportNoteAsZip(note: DecryptedNote) {
   const metaText = [
     `NOT DETAYLARI VE ADLİ İZ BİLGİSİ`,
     `----------------------------------------`,
-    `Not ID        : ${note.id}`,
-    `Oluşturulma   : ${formatFullDateTime(note.createdAt)}`,
-    `Güncellenme   : ${formatFullDateTime(note.updatedAt)}`,
-    `İmha Saati    : ${formatFullDateTime(note.expiresAt)}`,
-    `Kayıt IP      : ${note.createdIp || "127.0.0.1"}`,
+    `Not ID          : ${note.id}`,
+    `Oluşturulma     : ${formatFullDateTime(note.createdAt)}`,
+    `Güncellenme     : ${formatFullDateTime(note.updatedAt)}`,
+    `İmha Saati      : ${formatFullDateTime(note.expiresAt)}`,
+    `Kayıt IP        : ${note.createdIp || "127.0.0.1"}`,
     `Cihaz / Tarayıcı: ${note.userAgent || "Bilinmiyor"}`,
-    `Şifreleme     : AES-GCM 256-bit (Zero-Knowledge)`,
   ].join("\n");
   zip.file("cihaz-ip-bilgileri.txt", metaText);
 

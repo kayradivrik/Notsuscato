@@ -4,13 +4,13 @@ import { prisma } from "@/lib/prisma";
 import { noteSchema } from "@/lib/validations";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   const session = await getCurrentUser();
   if (!session) {
     return NextResponse.json({ error: "Yetkisiz erişim." }, { status: 401 });
   }
 
-  // Süresi dolmuş tüm notları otomatik imha et (Self-destruct)
+  // Süresi dolmuş tüm notları otomatik imha et
   await prisma.note.deleteMany({
     where: {
       expiresAt: {
@@ -24,9 +24,8 @@ export async function GET(req: NextRequest) {
     orderBy: [{ isPinned: "desc" }, { updatedAt: "desc" }],
     select: {
       id: true,
-      titleCiphertext: true,
-      bodyCiphertext: true,
-      iv: true,
+      title: true,
+      body: true,
       isPinned: true,
       createdIp: true,
       userAgent: true,
@@ -46,7 +45,7 @@ export async function POST(req: NextRequest) {
   }
 
   const ip = getClientIp(req);
-  const userAgent = req.headers.get("user-agent") || "Bilinmeyen Cihaz";
+  const userAgent = req.headers.get("user-agent") || "Bilinmiyor";
 
   const rate = checkRateLimit(`note_create:${session.userId}:${ip}`, 60, 60_000);
   if (!rate.success) {
@@ -67,7 +66,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { titleCiphertext, bodyCiphertext, iv, isPinned, expiresInHours } = parsed.data;
+    const { title, body: noteBody, isPinned, expiresInHours } = parsed.data;
 
     // Süre hesaplama (Maksimum 24 saat, varsayılan 24 saat)
     const hours = Math.min(Math.max(expiresInHours || 24, 1), 24);
@@ -76,9 +75,8 @@ export async function POST(req: NextRequest) {
     const note = await prisma.note.create({
       data: {
         userId: session.userId,
-        titleCiphertext,
-        bodyCiphertext,
-        iv,
+        title,
+        body: noteBody,
         isPinned,
         createdIp: ip,
         userAgent,

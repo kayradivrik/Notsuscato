@@ -4,63 +4,50 @@ import { useState, useEffect, useCallback } from "react";
 import { AuthModal } from "@/components/AuthModal";
 import { NoteList } from "@/components/NoteList";
 import { NoteEditor } from "@/components/NoteEditor";
+import { AdminModal } from "@/components/AdminModal";
 import { DecryptedNote } from "@/lib/export";
-import {
-  encryptText,
-  decryptText,
-  deriveEncryptionKey,
-} from "@/lib/crypto";
+import { Language, translations } from "@/lib/i18n";
 
 interface UserProfile {
   id: string;
   username: string;
-  clientSalt?: string;
-}
-
-interface EncryptedNoteRecord {
-  id: string;
-  titleCiphertext: string;
-  bodyCiphertext: string;
-  iv: string;
-  isPinned: boolean;
-  createdIp?: string;
-  userAgent?: string;
-  expiresAt?: string;
-  createdAt: string;
-  updatedAt: string;
+  role: string;
 }
 
 export default function Home() {
+  const [lang, setLang] = useState<Language>("tr");
   const [user, setUser] = useState<UserProfile | null>(null);
-  const [cryptoKey, setCryptoKey] = useState<CryptoKey | null>(null);
   const [notes, setNotes] = useState<DecryptedNote[]>([]);
   const [activeNoteId, setActiveNoteId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
-  const [needsUnlock, setNeedsUnlock] = useState(false);
+  const [showAdminModal, setShowAdminModal] = useState(false);
 
+  const t = translations[lang];
+  const languages: Language[] = ["tr", "en", "de", "ru"];
+
+  // Dil tercihini yükle
+  useEffect(() => {
+    const saved = localStorage.getItem("notsuscato_lang") as Language;
+    if (saved && ["tr", "en", "de", "ru"].includes(saved)) {
+      setLang(saved);
+    }
+  }, []);
+
+  const handleLanguageChange = (newLang: Language) => {
+    setLang(newLang);
+    localStorage.setItem("notsuscato_lang", newLang);
+  };
+
+  // Oturum kontrolü
   useEffect(() => {
     async function checkAuth() {
       try {
         const res = await fetch("/api/auth/me");
-        if (!res.ok) {
-          setLoading(false);
-          return;
-        }
-
-        const data = await res.json();
-        if (data.user) {
-          setUser(data.user);
-          const cachedPass = sessionStorage.getItem("vault_pass_temp");
-          if (cachedPass && data.user.clientSalt) {
-            try {
-              const key = await deriveEncryptionKey(cachedPass, data.user.clientSalt);
-              setCryptoKey(key);
-            } catch {
-              setNeedsUnlock(true);
-            }
-          } else {
-            setNeedsUnlock(true);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.user) {
+            setUser(data.user);
           }
         }
       } catch (err) {
@@ -73,44 +60,18 @@ export default function Home() {
     checkAuth();
   }, []);
 
-  const fetchAndDecryptNotes = useCallback(async (key: CryptoKey) => {
+  // Notları çek
+  const fetchNotes = useCallback(async () => {
     try {
       const res = await fetch("/api/notes");
       if (!res.ok) return;
 
       const data = await res.json();
-      const rawNotes: EncryptedNoteRecord[] = data.notes || [];
+      const loadedNotes: DecryptedNote[] = data.notes || [];
 
-      const decrypted: DecryptedNote[] = await Promise.all(
-        rawNotes.map(async (n) => {
-          let title = "";
-          let body = "";
-          try {
-            title = await decryptText(n.titleCiphertext, n.iv, key);
-            body = await decryptText(n.bodyCiphertext, n.iv, key);
-          } catch {
-            title = "[şifre çözülemedi]";
-            body = "";
-          }
-
-          return {
-            id: n.id,
-            title,
-            body,
-            iv: n.iv,
-            isPinned: n.isPinned,
-            createdIp: n.createdIp,
-            userAgent: n.userAgent,
-            expiresAt: n.expiresAt,
-            createdAt: n.createdAt,
-            updatedAt: n.updatedAt,
-          };
-        })
-      );
-
-      setNotes(decrypted);
-      if (decrypted.length > 0 && !activeNoteId) {
-        setActiveNoteId(decrypted[0].id);
+      setNotes(loadedNotes);
+      if (loadedNotes.length > 0 && !activeNoteId) {
+        setActiveNoteId(loadedNotes[0].id);
       }
     } catch (err) {
       console.error("Not yükleme hatası:", err);
@@ -118,27 +79,23 @@ export default function Home() {
   }, [activeNoteId]);
 
   useEffect(() => {
-    if (cryptoKey) {
-      fetchAndDecryptNotes(cryptoKey);
+    if (user) {
+      fetchNotes();
     }
-  }, [cryptoKey, fetchAndDecryptNotes]);
+  }, [user, fetchNotes]);
 
+  // Yeni Not Oluştur
   const handleCreateNote = async (initialHours: number = 24) => {
-    if (!cryptoKey) return;
-
     try {
-      const defaultTitle = "isimsiz";
+      const defaultTitle = t.untitled;
       const defaultBody = "";
-      const { ciphertext: titleCiphertext, iv } = await encryptText(defaultTitle, cryptoKey);
-      const { ciphertext: bodyCiphertext } = await encryptText(defaultBody, cryptoKey);
 
       const res = await fetch("/api/notes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          titleCiphertext,
-          bodyCiphertext,
-          iv,
+          title: defaultTitle,
+          body: defaultBody,
           isPinned: false,
           expiresInHours: initialHours,
         }),
@@ -147,18 +104,7 @@ export default function Home() {
       if (!res.ok) return;
 
       const data = await res.json();
-      const createdNote: DecryptedNote = {
-        id: data.note.id,
-        title: defaultTitle,
-        body: defaultBody,
-        iv: data.note.iv,
-        isPinned: data.note.isPinned,
-        createdIp: data.note.createdIp,
-        userAgent: data.note.userAgent,
-        expiresAt: data.note.expiresAt,
-        createdAt: data.note.createdAt,
-        updatedAt: data.note.updatedAt,
-      };
+      const createdNote: DecryptedNote = data.note;
 
       setNotes((prev) => [createdNote, ...prev]);
       setActiveNoteId(createdNote.id);
@@ -167,6 +113,7 @@ export default function Home() {
     }
   };
 
+  // Not Güncelle
   const handleSaveNote = async (
     id: string,
     newTitle: string,
@@ -174,15 +121,9 @@ export default function Home() {
     isPinned: boolean,
     expiresInHours?: number
   ) => {
-    if (!cryptoKey) return;
-
-    const { ciphertext: titleCiphertext, iv } = await encryptText(newTitle, cryptoKey);
-    const { ciphertext: bodyCiphertext } = await encryptText(newBody, cryptoKey);
-
     const payload: Record<string, unknown> = {
-      titleCiphertext,
-      bodyCiphertext,
-      iv,
+      title: newTitle,
+      body: newBody,
       isPinned,
     };
     if (expiresInHours) payload.expiresInHours = expiresInHours;
@@ -214,6 +155,7 @@ export default function Home() {
     );
   };
 
+  // Not Sil
   const handleDeleteNote = async (id: string) => {
     try {
       const res = await fetch(`/api/notes/${id}`, { method: "DELETE" });
@@ -231,6 +173,7 @@ export default function Home() {
     }
   };
 
+  // Sabitle / Sabitlemeyi Kaldır
   const handleTogglePin = async (note: DecryptedNote) => {
     try {
       const res = await fetch(`/api/notes/${note.id}`, {
@@ -251,24 +194,16 @@ export default function Home() {
     }
   };
 
-  const handleLockVault = () => {
-    sessionStorage.removeItem("vault_pass_temp");
-    setCryptoKey(null);
-    setNotes([]);
-    setActiveNoteId(null);
-    setNeedsUnlock(true);
-  };
-
+  // Çıkış
   const handleLogout = async () => {
-    sessionStorage.removeItem("vault_pass_temp");
     await fetch("/api/auth/logout", { method: "POST" });
     setUser(null);
-    setCryptoKey(null);
     setNotes([]);
     setActiveNoteId(null);
-    setNeedsUnlock(false);
+    setShowAdminModal(false);
   };
 
+  // Kısayol: Ctrl+N
   useEffect(() => {
     const handleGlobalKey = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "n") {
@@ -278,32 +213,24 @@ export default function Home() {
     };
     window.addEventListener("keydown", handleGlobalKey);
     return () => window.removeEventListener("keydown", handleGlobalKey);
-  }, [cryptoKey]);
+  }, [user]);
 
   const activeNote = notes.find((n) => n.id === activeNoteId) || null;
 
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center bg-black text-zinc-700 font-mono text-xs">
-        yükleniyor...
+        {t.saving}
       </div>
     );
   }
 
-  if (!user || (!cryptoKey && needsUnlock)) {
+  if (!user) {
     return (
       <AuthModal
-        unlockOnly={
-          needsUnlock && user && user.clientSalt
-            ? { username: user.username, clientSalt: user.clientSalt }
-            : undefined
-        }
-        onSuccess={(loggedUser, key) => {
-          if (loggedUser.id) setUser(loggedUser);
-          setCryptoKey(key);
-          setNeedsUnlock(false);
-        }}
-        onCancelUnlock={handleLogout}
+        lang={lang}
+        onLanguageChange={handleLanguageChange}
+        onSuccess={(loggedUser) => setUser(loggedUser)}
       />
     );
   }
@@ -313,24 +240,38 @@ export default function Home() {
       {/* Top Header */}
       <header className="h-8 border-b border-zinc-900 px-4 flex items-center justify-between bg-black select-none text-[11px]">
         <div className="flex items-center gap-2">
-          <span className="font-bold text-zinc-100 tracking-wider">NOTLAR</span>
+          <span className="font-bold text-white tracking-widest">{t.appName}</span>
           <span className="text-zinc-700">/</span>
-          <span className="text-zinc-500">süreli e2ee</span>
+          <div className="flex gap-1 text-[10px]">
+            {languages.map((l) => (
+              <button
+                key={l}
+                onClick={() => handleLanguageChange(l)}
+                className={`px-1 uppercase transition ${
+                  lang === l ? "text-white font-bold underline" : "text-zinc-600 hover:text-zinc-400"
+                }`}
+              >
+                {l}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <span className="text-zinc-500">@{user.username}</span>
-          <button
-            onClick={handleLockVault}
-            className="text-zinc-500 hover:text-zinc-300 transition"
-          >
-            [kilitle]
-          </button>
+          <span className="text-zinc-400">@{user.username}</span>
+          {user.role === "ADMIN" && (
+            <button
+              onClick={() => setShowAdminModal(true)}
+              className="text-amber-400 border border-amber-800/80 bg-amber-950/30 px-1.5 py-0.2 hover:bg-amber-900/40 transition text-[10px]"
+            >
+              [{t.adminPanel}]
+            </button>
+          )}
           <button
             onClick={handleLogout}
             className="text-zinc-600 hover:text-red-400 transition"
           >
-            [çıkış]
+            [{t.logout}]
           </button>
         </div>
       </header>
@@ -338,6 +279,7 @@ export default function Home() {
       {/* Main Workspace */}
       <main className="flex-1 flex overflow-hidden">
         <NoteList
+          lang={lang}
           notes={notes}
           activeNoteId={activeNoteId}
           searchQuery={searchQuery}
@@ -348,12 +290,18 @@ export default function Home() {
           onTogglePin={handleTogglePin}
         />
         <NoteEditor
+          lang={lang}
           note={activeNote}
           onSave={handleSaveNote}
           onDelete={handleDeleteNote}
           onTogglePin={handleTogglePin}
         />
       </main>
+
+      {/* Admin Panel Overlay */}
+      {showAdminModal && (
+        <AdminModal lang={lang} onClose={() => setShowAdminModal(false)} />
+      )}
     </div>
   );
 }

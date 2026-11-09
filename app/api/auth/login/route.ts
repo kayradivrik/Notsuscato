@@ -7,6 +7,7 @@ import { signSession, SESSION_COOKIE_NAME } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   const ip = getClientIp(req);
+  const userAgent = req.headers.get("user-agent") || "Bilinmiyor";
   const rate = checkRateLimit(`login:${ip}`, 5, 60_000);
   if (!rate.success) {
     return NextResponse.json(
@@ -47,9 +48,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Kullanıcının son IP ve cihaz bilgisini güncelle
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { lastIp: ip, userAgent },
+    });
+
     const token = await signSession({
       userId: user.id,
       username: user.username,
+      role: user.role,
     });
 
     const response = NextResponse.json({
@@ -57,7 +65,7 @@ export async function POST(req: NextRequest) {
       user: {
         id: user.id,
         username: user.username,
-        clientSalt: user.clientSalt,
+        role: user.role,
       },
     });
 
@@ -78,4 +86,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-

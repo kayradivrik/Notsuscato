@@ -34,9 +34,8 @@ export async function PUT(
     }
 
     const updateData: Record<string, unknown> = {};
-    if (parsed.data.titleCiphertext !== undefined) updateData.titleCiphertext = parsed.data.titleCiphertext;
-    if (parsed.data.bodyCiphertext !== undefined) updateData.bodyCiphertext = parsed.data.bodyCiphertext;
-    if (parsed.data.iv !== undefined) updateData.iv = parsed.data.iv;
+    if (parsed.data.title !== undefined) updateData.title = parsed.data.title;
+    if (parsed.data.body !== undefined) updateData.body = parsed.data.body;
     if (parsed.data.isPinned !== undefined) updateData.isPinned = parsed.data.isPinned;
     if (parsed.data.expiresInHours !== undefined) {
       updateData.expiresAt = new Date(Date.now() + parsed.data.expiresInHours * 60 * 60 * 1000);
@@ -68,8 +67,12 @@ export async function DELETE(
 
   const { id } = await params;
 
+  // Normal kullanıcı kendi notunu, ADMIN ise herhangi bir notu silebilir
+  const whereCondition =
+    session.role === "ADMIN" ? { id } : { id, userId: session.userId };
+
   const existingNote = await prisma.note.findFirst({
-    where: { id, userId: session.userId },
+    where: whereCondition,
   });
 
   if (!existingNote) {

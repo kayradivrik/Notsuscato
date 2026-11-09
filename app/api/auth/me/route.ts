@@ -13,7 +13,7 @@ export async function GET() {
     select: {
       id: true,
       username: true,
-      clientSalt: true,
+      role: true,
       createdAt: true,
     },
   });
@@ -24,4 +24,3 @@ export async function GET() {
 
   return NextResponse.json({ user });
 }
-

@@ -9,6 +9,7 @@ const SECRET = new TextEncoder().encode(
 export interface SessionPayload {
   userId: string;
   username: string;
+  role: string;
 }
 
 export async function signSession(payload: SessionPayload): Promise<string> {
@@ -25,6 +26,7 @@ export async function verifySession(token: string): Promise<SessionPayload | nul
     return {
       userId: payload.userId as string,
       username: payload.username as string,
+      role: (payload.role as string) || "USER",
     };
   } catch {
     return null;
@@ -37,4 +39,3 @@ export async function getCurrentUser(): Promise<SessionPayload | null> {
   if (!token) return null;
   return verifySession(token);
 }
-
