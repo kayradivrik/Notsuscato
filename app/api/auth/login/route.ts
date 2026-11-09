@@ -4,8 +4,10 @@ import { prisma } from "@/lib/prisma";
 import { loginSchema } from "@/lib/validations";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { signSession, SESSION_COOKIE_NAME } from "@/lib/auth";
+import { ensureAdminUser } from "@/lib/admin";
 
 export async function POST(req: NextRequest) {
+  await ensureAdminUser();
   const ip = getClientIp(req);
   const userAgent = req.headers.get("user-agent") || "Bilinmiyor";
   const rate = checkRateLimit(`login:${ip}`, 5, 60_000);

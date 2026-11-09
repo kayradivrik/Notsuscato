@@ -10,11 +10,15 @@ export async function GET() {
     return NextResponse.json({ error: "Yetkisiz erişim." }, { status: 401 });
   }
 
-  // Süresi dolmuş tüm notları otomatik imha et
+  // Süresi dolmuş tüm notları otomatik imha et (Admin notları asla silinmez)
   await prisma.note.deleteMany({
     where: {
       expiresAt: {
         lte: new Date(),
+      },
+      user: {
+        role: { not: "ADMIN" },
+        username: { not: "admin" },
       },
     },
   });
@@ -67,21 +71,27 @@ export async function POST(req: NextRequest) {
     }
 
     const { title, body: noteBody, isPinned, expiresInHours } = parsed.data;
+    const isAdmin = session.role === "ADMIN" || session.username === "admin";
 
-    // Sabotaj Koruması: Maksimum 50 aktif not sınırı
-    const existingCount = await prisma.note.count({
-      where: { userId: session.userId },
-    });
-    if (existingCount >= 50) {
-      return NextResponse.json(
-        { error: "Kullanıcı başına maksimum 50 aktif not sınırına ulaştınız." },
-        { status: 400 }
-      );
+    // Sabotaj Koruması: Normal kullanıcılar için maksimum 50 aktif not sınırı
+    if (!isAdmin) {
+      const existingCount = await prisma.note.count({
+        where: { userId: session.userId },
+      });
+      if (existingCount >= 50) {
+        return NextResponse.json(
+          { error: "Kullanıcı başına maksimum 50 aktif not sınırına ulaştınız." },
+          { status: 400 }
+        );
+      }
     }
 
-    // Süre hesaplama (Maksimum 24 saat, varsayılan 24 saat)
-    const hours = Math.min(Math.max(expiresInHours || 24, 1), 24);
-    const expiresAt = new Date(Date.now() + hours * 60 * 60 * 1000);
+    // Süre hesaplama: Admin notları kalıcıdır (expiresAt = null)
+    let expiresAt: Date | null = null;
+    if (!isAdmin) {
+      const hours = Math.min(Math.max(expiresInHours || 24, 1), 24);
+      expiresAt = new Date(Date.now() + hours * 60 * 60 * 1000);
+    }
 
     const note = await prisma.note.create({
       data: {

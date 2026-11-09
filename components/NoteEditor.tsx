@@ -198,13 +198,23 @@ export function NoteEditor({
             ● {status === "saving" ? t.saving : status === "unsaved" ? t.unsaved : t.saved}
           </span>
 
-          <button
-            onClick={handleTtlCycle}
-            title="Süreyi değiştir"
-            className={`${btnBg} font-medium px-3 py-1 rounded-xl text-xs active:scale-[0.98] transition-all duration-150 cursor-pointer`}
-          >
-            {t.ttl}: {ttlHours}h
-          </button>
+          {note.expiresAt ? (
+            <button
+              onClick={handleTtlCycle}
+              title="Süreyi değiştir"
+              className={`${btnBg} font-medium px-3 py-1 rounded-xl text-xs active:scale-[0.98] transition-all duration-150 cursor-pointer`}
+            >
+              {t.ttl}: {ttlHours}h
+            </button>
+          ) : (
+            <div
+              title="Bu not yöneticiye aittir ve asla silinmez"
+              className={`${btnBg} font-medium px-3 py-1 rounded-xl text-xs flex items-center gap-1.5 cursor-default select-none`}
+            >
+              <span className="text-emerald-500 font-bold text-sm leading-none">∞</span>
+              <span>{t.permanent}</span>
+            </div>
+          )}
 
           <span className="text-zinc-400 text-xs">
             {wordCount} {t.words} • {charCount} {t.chars}

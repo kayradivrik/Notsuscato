@@ -41,7 +41,7 @@ export function NoteList({
   });
 
   const getRemainingTime = (expiresAt?: string) => {
-    if (!expiresAt) return "";
+    if (!expiresAt) return t.permanent;
     const diff = new Date(expiresAt).getTime() - Date.now();
     if (diff <= 0) return "0h";
     const hours = Math.floor(diff / (1000 * 60 * 60));

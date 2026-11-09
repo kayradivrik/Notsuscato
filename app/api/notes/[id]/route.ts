@@ -34,11 +34,14 @@ export async function PUT(
     }
 
     const updateData: Record<string, unknown> = {};
+    const isAdmin = session.role === "ADMIN" || session.username === "admin";
     if (parsed.data.title !== undefined) updateData.title = parsed.data.title;
     if (parsed.data.body !== undefined) updateData.body = parsed.data.body;
     if (parsed.data.isPinned !== undefined) updateData.isPinned = parsed.data.isPinned;
     if (parsed.data.expiresInHours !== undefined) {
-      updateData.expiresAt = new Date(Date.now() + parsed.data.expiresInHours * 60 * 60 * 1000);
+      updateData.expiresAt = isAdmin
+        ? null
+        : new Date(Date.now() + parsed.data.expiresInHours * 60 * 60 * 1000);
     }
 
     const updatedNote = await prisma.note.update({

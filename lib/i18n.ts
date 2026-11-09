@@ -85,6 +85,7 @@ export const translations = {
     themeGlass: "Yağmur Glass",
     registeredOn: "Kayıt Tarihi",
     totalNotes: "Toplam Not",
+    permanent: "Kalıcı",
   },
   en: {
     appName: "notsuscato",
@@ -170,6 +171,7 @@ export const translations = {
     themeGlass: "Rain Glass",
     registeredOn: "Member Since",
     totalNotes: "Total Notes",
+    permanent: "Permanent",
   },
   de: {
     appName: "notsuscato",
@@ -255,6 +257,7 @@ export const translations = {
     themeGlass: "Regen-Glas",
     registeredOn: "Mitglied seit",
     totalNotes: "Notizen gesamt",
+    permanent: "Dauerhaft",
   },
   ru: {
     appName: "notsuscato",
@@ -340,5 +343,6 @@ export const translations = {
     themeGlass: "Дождливое стекло",
     registeredOn: "Дата регистрации",
     totalNotes: "Всего заметок",
+    permanent: "Бессрочно",
   },
 };

@@ -94,9 +94,13 @@ export async function DELETE(req: NextRequest) {
   }
 
   if (type === "user") {
-    // Admin kendi kendini silemesin
+    // Admin kendi kendini silemesin ve ana admin silinemez
     if (id === session.userId) {
       return NextResponse.json({ error: "Kendi hesabınızı silemezsiniz." }, { status: 400 });
+    }
+    const target = await prisma.user.findUnique({ where: { id } });
+    if (target?.username === "admin") {
+      return NextResponse.json({ error: "Ana yönetici hesabı silinemez." }, { status: 400 });
     }
     await prisma.user.delete({ where: { id } });
     return NextResponse.json({ success: true, message: "Kullanıcı ve notları silindi." });
