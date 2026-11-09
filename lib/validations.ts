@@ -20,8 +20,8 @@ export const loginSchema = z.object({
 });
 
 export const noteSchema = z.object({
-  title: z.string().min(1, "Başlık boş olamaz."),
-  body: z.string().default(""),
+  title: z.string().trim().min(1, "Başlık boş olamaz.").max(120, "Başlık en fazla 120 karakter olabilir."),
+  body: z.string().max(50_000, "Not içeriği en fazla 50.000 karakter olabilir.").default(""),
   isPinned: z.boolean().default(false),
   expiresInHours: z.number().min(1).max(24).optional().default(24),
 });
