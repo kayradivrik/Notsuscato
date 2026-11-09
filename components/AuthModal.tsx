@@ -49,23 +49,34 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
   const languages: Language[] = ["tr", "en", "de", "ru"];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4 font-mono text-xs text-zinc-300">
-      <div className="w-full max-w-sm border border-zinc-800 bg-zinc-950 p-6 space-y-5 shadow-2xl">
-        {/* Top bar with language switcher */}
-        <div className="flex items-center justify-between border-b border-zinc-900 pb-3">
-          <span className="font-bold tracking-widest text-white text-sm">
-            {t.appName}
-          </span>
-          <div className="flex gap-1.5 text-[10px]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gradient-to-br from-orange-50/60 via-[#fafafb] to-orange-100/30">
+      {/* Background Decorative Circles */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-200/25 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-amber-200/20 rounded-full blur-3xl pointer-events-none" />
+
+      {/* Auth Card */}
+      <div className="relative w-full max-w-sm bg-white border border-zinc-200/90 rounded-2xl shadow-xl shadow-zinc-950/5 p-7 space-y-6">
+        {/* Header & Language Switcher */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-orange-500 text-white font-bold flex items-center justify-center text-sm shadow-sm">
+              N
+            </div>
+            <span className="font-bold text-base text-zinc-900 tracking-tight">
+              {t.appName}
+            </span>
+          </div>
+
+          <div className="flex gap-1 bg-zinc-100/90 p-1 rounded-lg">
             {languages.map((l) => (
               <button
                 key={l}
                 type="button"
                 onClick={() => onLanguageChange(l)}
-                className={`px-1 py-0.5 uppercase transition ${
+                className={`px-1.5 py-0.5 rounded text-[10px] font-semibold uppercase transition ${
                   lang === l
-                    ? "text-white font-bold underline"
-                    : "text-zinc-600 hover:text-zinc-400"
+                    ? "bg-white text-orange-600 shadow-xs"
+                    : "text-zinc-500 hover:text-zinc-800"
                 }`}
               >
                 {l}
@@ -74,25 +85,26 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
           </div>
         </div>
 
-        {/* Card Title */}
-        <div className="text-center space-y-1">
-          <h2 className="text-sm font-semibold text-zinc-100">
+        {/* Title */}
+        <div className="space-y-1">
+          <h2 className="text-lg font-bold text-zinc-900">
             {isRegister ? t.registerTitle : t.loginTitle}
           </h2>
-          <p className="text-[10px] text-zinc-500 leading-relaxed">
+          <p className="text-xs text-zinc-500 leading-relaxed">
             {t.authNotice}
           </p>
         </div>
 
         {error && (
-          <div className="border border-red-900/60 bg-red-950/30 p-2 text-red-400 text-[11px] text-center">
+          <div className="bg-red-50 border border-red-200/80 rounded-lg p-2.5 text-xs text-red-600 text-center font-medium">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-3.5">
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-[11px] text-zinc-400 mb-1">
+            <label className="block text-xs font-semibold text-zinc-700 mb-1.5">
               {t.username}
             </label>
             <input
@@ -101,13 +113,13 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
               autoFocus
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="username"
-              className="w-full border border-zinc-800 bg-black px-3 py-2 text-zinc-200 placeholder-zinc-700 focus:outline-none focus:border-zinc-500 text-xs"
+              placeholder="kullanici_adi"
+              className="w-full bg-zinc-50/60 border border-zinc-300 rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:bg-white focus:outline-none focus:border-orange-500 focus:ring-3 focus:ring-orange-500/15 transition"
             />
           </div>
 
           <div>
-            <label className="block text-[11px] text-zinc-400 mb-1">
+            <label className="block text-xs font-semibold text-zinc-700 mb-1.5">
               {t.password}
             </label>
             <input
@@ -116,7 +128,7 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full border border-zinc-800 bg-black px-3 py-2 text-zinc-200 placeholder-zinc-700 focus:outline-none focus:border-zinc-500 text-xs"
+              className="w-full bg-zinc-50/60 border border-zinc-300 rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:bg-white focus:outline-none focus:border-orange-500 focus:ring-3 focus:ring-orange-500/15 transition"
             />
           </div>
 
@@ -126,13 +138,13 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
                 <button
                   type="button"
                   onClick={() => setShowAdminKey(true)}
-                  className="text-[10px] text-zinc-600 hover:text-zinc-400 underline"
+                  className="text-xs text-zinc-500 hover:text-orange-600 transition"
                 >
                   + {t.adminKey}
                 </button>
               ) : (
-                <div>
-                  <label className="block text-[10px] text-zinc-500 mb-1">
+                <div className="space-y-1">
+                  <label className="block text-xs font-semibold text-zinc-700">
                     {t.adminKey}
                   </label>
                   <input
@@ -140,7 +152,7 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
                     value={adminKey}
                     onChange={(e) => setAdminKey(e.target.value)}
                     placeholder="secret"
-                    className="w-full border border-zinc-800 bg-black px-3 py-1.5 text-zinc-200 placeholder-zinc-700 focus:outline-none focus:border-zinc-500 text-xs"
+                    className="w-full bg-zinc-50/60 border border-zinc-300 rounded-lg px-3 py-1.5 text-xs text-zinc-900 placeholder-zinc-400 focus:bg-white focus:outline-none focus:border-orange-500 focus:ring-3 focus:ring-orange-500/15 transition"
                   />
                 </div>
               )}
@@ -150,14 +162,14 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
           <button
             type="submit"
             disabled={loading}
-            className="w-full border border-zinc-700 bg-zinc-900 py-2 text-zinc-100 hover:bg-zinc-800 hover:border-zinc-500 font-semibold transition disabled:opacity-50 text-xs"
+            className="w-full bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-semibold py-2.5 rounded-lg shadow-sm hover:shadow transition disabled:opacity-50 text-sm cursor-pointer"
           >
             {loading ? t.saving : isRegister ? t.registerBtn : t.loginBtn}
           </button>
         </form>
 
-        {/* Toggle between Register / Login */}
-        <div className="border-t border-zinc-900 pt-3 text-center text-[11px] text-zinc-500">
+        {/* Toggle Account Mode */}
+        <div className="border-t border-zinc-100 pt-3 text-center text-xs text-zinc-600">
           <span>{isRegister ? t.hasAccount : t.noAccount} </span>
           <button
             type="button"
@@ -165,11 +177,16 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
               setIsRegister(!isRegister);
               setError(null);
             }}
-            className="text-zinc-200 hover:underline font-bold ml-1"
+            className="text-orange-600 hover:text-orange-700 font-semibold ml-1 cursor-pointer"
           >
             {isRegister ? t.signIn : t.signUp}
           </button>
         </div>
+
+        {/* Legal Disclaimer */}
+        <p className="text-[10px] text-zinc-400 text-center leading-relaxed">
+          {t.legalDisclaimer}
+        </p>
       </div>
     </div>
   );

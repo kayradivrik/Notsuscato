@@ -51,6 +51,7 @@ export const translations = {
     emptyAdmin: "Henüz hiçbir kullanıcı veya not bulunmuyor.",
     author: "Yazar",
     close: "Kapat",
+    legalDisclaimer: "Yasal Uyarı: Notlar seçilen süre sonunda kalıcı olarak silinir. Yasa dışı kullanımlardan kullanıcı sorumludur.",
   },
   en: {
     appName: "NOTSUSCATO",
@@ -102,6 +103,7 @@ export const translations = {
     emptyAdmin: "No users or notes found yet.",
     author: "Author",
     close: "Close",
+    legalDisclaimer: "Disclaimer: Notes are permanently purged upon expiration. Users are responsible for unlawful usage.",
   },
   de: {
     appName: "NOTSUSCATO",
@@ -153,6 +155,7 @@ export const translations = {
     emptyAdmin: "Noch keine Benutzer oder Notizen vorhanden.",
     author: "Autor",
     close: "Schließen",
+    legalDisclaimer: "Haftungsausschluss: Notizen werden nach Ablauf dauerhaft gelöscht. Der Benutzer haftet für rechtswidrige Nutzung.",
   },
   ru: {
     appName: "NOTSUSCATO",
@@ -204,5 +207,7 @@ export const translations = {
     emptyAdmin: "Пока нет пользователей или заметок.",
     author: "Автор",
     close: "Закрыть",
+    legalDisclaimer: "Отказ от ответственности: Заметки безвозвратно удаляются по истечении срока. Пользователи несут ответственность за неправомерное использование.",
   },
 };
+

@@ -26,7 +26,6 @@ export default function Home() {
   const t = translations[lang];
   const languages: Language[] = ["tr", "en", "de", "ru"];
 
-  // Dil tercihini yükle
   useEffect(() => {
     const saved = localStorage.getItem("notsuscato_lang") as Language;
     if (saved && ["tr", "en", "de", "ru"].includes(saved)) {
@@ -39,7 +38,6 @@ export default function Home() {
     localStorage.setItem("notsuscato_lang", newLang);
   };
 
-  // Oturum kontrolü
   useEffect(() => {
     async function checkAuth() {
       try {
@@ -60,7 +58,6 @@ export default function Home() {
     checkAuth();
   }, []);
 
-  // Notları çek
   const fetchNotes = useCallback(async () => {
     try {
       const res = await fetch("/api/notes");
@@ -84,7 +81,6 @@ export default function Home() {
     }
   }, [user, fetchNotes]);
 
-  // Yeni Not Oluştur
   const handleCreateNote = async (initialHours: number = 24) => {
     try {
       const defaultTitle = t.untitled;
@@ -113,7 +109,6 @@ export default function Home() {
     }
   };
 
-  // Not Güncelle
   const handleSaveNote = async (
     id: string,
     newTitle: string,
@@ -155,7 +150,6 @@ export default function Home() {
     );
   };
 
-  // Not Sil
   const handleDeleteNote = async (id: string) => {
     try {
       const res = await fetch(`/api/notes/${id}`, { method: "DELETE" });
@@ -173,7 +167,6 @@ export default function Home() {
     }
   };
 
-  // Sabitle / Sabitlemeyi Kaldır
   const handleTogglePin = async (note: DecryptedNote) => {
     try {
       const res = await fetch(`/api/notes/${note.id}`, {
@@ -194,7 +187,6 @@ export default function Home() {
     }
   };
 
-  // Çıkış
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
     setUser(null);
@@ -203,7 +195,6 @@ export default function Home() {
     setShowAdminModal(false);
   };
 
-  // Kısayol: Ctrl+N
   useEffect(() => {
     const handleGlobalKey = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "n") {
@@ -219,7 +210,7 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-black text-zinc-700 font-mono text-xs">
+      <div className="flex h-screen items-center justify-center bg-[#fbfbfd] text-zinc-400 text-sm">
         {t.saving}
       </div>
     );
@@ -236,19 +227,28 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-black text-zinc-300 font-mono text-xs">
+    <div className="flex flex-col h-screen w-screen overflow-hidden bg-[#fcfcfd] text-zinc-800">
       {/* Top Header */}
-      <header className="h-8 border-b border-zinc-900 px-4 flex items-center justify-between bg-black select-none text-[11px]">
-        <div className="flex items-center gap-2">
-          <span className="font-bold text-white tracking-widest">{t.appName}</span>
-          <span className="text-zinc-700">/</span>
-          <div className="flex gap-1 text-[10px]">
+      <header className="h-12 border-b border-zinc-200/90 px-5 flex items-center justify-between bg-white select-none shadow-2xs">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded-md bg-orange-500 text-white font-bold flex items-center justify-center text-xs shadow-xs">
+              N
+            </div>
+            <span className="font-bold text-sm tracking-tight text-zinc-900">
+              {t.appName}
+            </span>
+          </div>
+
+          <div className="flex gap-1 bg-zinc-100 p-0.5 rounded-md text-[10px]">
             {languages.map((l) => (
               <button
                 key={l}
                 onClick={() => handleLanguageChange(l)}
-                className={`px-1 uppercase transition ${
-                  lang === l ? "text-white font-bold underline" : "text-zinc-600 hover:text-zinc-400"
+                className={`px-1.5 py-0.5 rounded uppercase font-semibold transition cursor-pointer ${
+                  lang === l
+                    ? "bg-white text-orange-600 shadow-2xs"
+                    : "text-zinc-500 hover:text-zinc-800"
                 }`}
               >
                 {l}
@@ -258,20 +258,22 @@ export default function Home() {
         </div>
 
         <div className="flex items-center gap-3">
-          <span className="text-zinc-400">@{user.username}</span>
+          <span className="text-xs text-zinc-600 font-medium">@{user.username}</span>
+
           {user.role === "ADMIN" && (
             <button
               onClick={() => setShowAdminModal(true)}
-              className="text-amber-400 border border-amber-800/80 bg-amber-950/30 px-1.5 py-0.2 hover:bg-amber-900/40 transition text-[10px]"
+              className="bg-orange-50 hover:bg-orange-100 border border-orange-200 text-orange-700 font-semibold px-2.5 py-1 rounded-lg text-xs transition cursor-pointer"
             >
-              [{t.adminPanel}]
+              {t.adminPanel}
             </button>
           )}
+
           <button
             onClick={handleLogout}
-            className="text-zinc-600 hover:text-red-400 transition"
+            className="text-zinc-500 hover:text-red-600 hover:bg-zinc-100 px-2.5 py-1 rounded-lg text-xs transition cursor-pointer"
           >
-            [{t.logout}]
+            {t.logout}
           </button>
         </div>
       </header>

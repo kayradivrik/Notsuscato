@@ -109,8 +109,11 @@ export function NoteEditor({
 
   if (!note) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-black text-zinc-700 font-mono text-xs select-none">
-        {t.noNotes}
+      <div className="flex-1 flex flex-col items-center justify-center bg-white text-zinc-400 text-sm select-none">
+        <div className="w-10 h-10 rounded-full bg-orange-50 border border-orange-200/60 flex items-center justify-center text-orange-500 mb-2 font-bold">
+          ✍
+        </div>
+        <p>{t.noNotes}</p>
       </div>
     );
   }
@@ -129,85 +132,98 @@ export function NoteEditor({
   const charCount = body.length;
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-black font-mono text-xs text-zinc-300">
+    <div className="flex-1 flex flex-col h-full bg-white text-zinc-800">
       {/* Top minimal status & actions */}
-      <div className="px-5 py-2 border-b border-zinc-900 flex items-center justify-between text-[11px] text-zinc-600 select-none">
+      <div className="px-6 py-2.5 border-b border-zinc-200/80 flex items-center justify-between text-xs text-zinc-600 select-none bg-white">
         <div className="flex items-center gap-3">
-          <span className={status === "saving" ? "text-zinc-400" : status === "unsaved" ? "text-amber-500" : "text-zinc-600"}>
-            [{status === "saving" ? t.saving : status === "unsaved" ? t.unsaved : t.saved}]
+          <span
+            className={`font-medium ${
+              status === "saving"
+                ? "text-orange-500"
+                : status === "unsaved"
+                ? "text-amber-500"
+                : "text-emerald-600"
+            }`}
+          >
+            ● {status === "saving" ? t.saving : status === "unsaved" ? t.unsaved : t.saved}
           </span>
+
           <button
             onClick={handleTtlCycle}
             title="Süreyi değiştir"
-            className="hover:text-zinc-300 transition text-zinc-400"
+            className="bg-orange-50 hover:bg-orange-100 border border-orange-200 text-orange-700 font-semibold px-2.5 py-1 rounded-lg text-xs transition cursor-pointer"
           >
-            [{t.ttl}: {ttlHours}h]
+            {t.ttl}: {ttlHours}h
           </button>
-          <span>{wordCount} {t.words}</span>
-          <span>{charCount} {t.chars}</span>
+
+          <span className="text-zinc-400">
+            {wordCount} {t.words} • {charCount} {t.chars}
+          </span>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => exportNoteAsTxt(note)}
-            title="TXT Export"
-            className="hover:text-zinc-200 transition"
+            className="bg-zinc-100 hover:bg-zinc-200/80 text-zinc-700 px-2.5 py-1 rounded-lg text-xs font-medium transition cursor-pointer"
           >
-            [{t.txtExport}]
+            TXT
           </button>
           <button
             type="button"
             onClick={() => exportNoteAsZip(note)}
-            title="ZIP Export"
-            className="hover:text-zinc-200 transition"
+            className="bg-zinc-100 hover:bg-zinc-200/80 text-zinc-700 px-2.5 py-1 rounded-lg text-xs font-medium transition cursor-pointer"
           >
-            [{t.zipExport}]
+            ZIP
           </button>
           <button
             type="button"
             onClick={() => onTogglePin(note)}
-            className="hover:text-zinc-300 transition"
+            className={`px-2.5 py-1 rounded-lg text-xs font-medium transition cursor-pointer ${
+              note.isPinned
+                ? "bg-orange-100 text-orange-800"
+                : "bg-zinc-100 hover:bg-zinc-200/80 text-zinc-700"
+            }`}
           >
-            {note.isPinned ? `[${t.unpin}]` : `[${t.pin}]`}
+            {note.isPinned ? `★ ${t.unpin}` : `☆ ${t.pin}`}
           </button>
           <button
             type="button"
             onClick={() => {
               if (confirm(t.confirmDelete)) onDelete(note.id);
             }}
-            className="hover:text-red-400 transition"
+            className="bg-red-50 hover:bg-red-100 text-red-600 px-2.5 py-1 rounded-lg text-xs font-medium transition cursor-pointer"
           >
-            [{t.delete}]
+            {t.delete}
           </button>
         </div>
       </div>
 
       {/* Editor Content Area */}
-      <div className="flex-1 flex flex-col px-5 py-4 max-w-4xl w-full mx-auto overflow-hidden">
+      <div className="flex-1 flex flex-col px-8 py-6 max-w-4xl w-full mx-auto overflow-hidden">
         <input
           type="text"
           value={title}
           onChange={(e) => handleTitleChange(e.target.value)}
           placeholder={`${t.untitled}...`}
-          className="w-full bg-transparent text-sm font-bold text-zinc-100 placeholder-zinc-800 focus:outline-none mb-3 pb-1 border-b border-zinc-900 focus:border-zinc-700"
+          className="w-full bg-transparent text-xl font-bold text-zinc-900 placeholder-zinc-300 focus:outline-none mb-4 pb-2 border-b border-transparent focus:border-zinc-200 transition"
         />
 
         <textarea
           value={body}
           onChange={(e) => handleBodyChange(e.target.value)}
-          placeholder="..."
-          className="flex-1 w-full bg-transparent resize-none text-zinc-300 placeholder-zinc-800 focus:outline-none leading-relaxed font-mono text-xs"
+          placeholder="Not içeriğinizi buraya yazın..."
+          className="flex-1 w-full bg-transparent resize-none text-zinc-800 placeholder-zinc-300 focus:outline-none leading-relaxed text-sm"
         />
       </div>
 
       {/* Bottom Forensic Status Bar */}
-      <div className="px-5 py-1.5 border-t border-zinc-900 text-[10px] text-zinc-600 flex items-center justify-between select-none">
+      <div className="px-6 py-2 border-t border-zinc-100 text-[11px] text-zinc-400 bg-zinc-50/50 flex items-center justify-between select-none">
         <div className="truncate max-w-md">
           <span>{t.ipAddress}: {note.createdIp || "127.0.0.1"}</span>
-          <span className="mx-2 text-zinc-800">•</span>
+          <span className="mx-2 text-zinc-300">•</span>
           <span className="truncate" title={note.userAgent || ""}>
-            {t.device}: {note.userAgent ? note.userAgent.slice(0, 35) + "..." : "-"}
+            {t.device}: {note.userAgent ? note.userAgent.slice(0, 40) + "..." : "-"}
           </span>
         </div>
         <div>

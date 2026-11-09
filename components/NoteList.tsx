@@ -39,36 +39,36 @@ export function NoteList({
   const getRemainingTime = (expiresAt?: string) => {
     if (!expiresAt) return "";
     const diff = new Date(expiresAt).getTime() - Date.now();
-    if (diff <= 0) return "0s";
+    if (diff <= 0) return "0h";
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    if (hours > 0) return `${hours}s`;
+    if (hours > 0) return `${hours}h`;
     return `${mins}m`;
   };
 
   return (
-    <aside className="w-56 border-r border-zinc-900 bg-black flex flex-col h-full font-mono text-xs select-none shrink-0">
+    <aside className="w-64 border-r border-zinc-200/80 bg-zinc-50/60 flex flex-col h-full text-xs select-none shrink-0">
       {/* Top search & create */}
-      <div className="p-2.5 border-b border-zinc-900 flex items-center gap-2">
+      <div className="p-3 border-b border-zinc-200/80 flex items-center gap-2">
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder={t.searchPlaceholder}
-          className="flex-1 bg-transparent border-b border-zinc-800 text-zinc-300 placeholder-zinc-700 pb-0.5 focus:outline-none focus:border-zinc-500 text-[11px]"
+          className="flex-1 bg-white border border-zinc-300 rounded-lg px-2.5 py-1.5 text-zinc-800 placeholder-zinc-400 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/15 text-xs transition"
         />
         <button
           onClick={onCreateNote}
-          className="text-zinc-400 hover:text-white transition text-[11px]"
+          className="bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-medium px-2.5 py-1.5 rounded-lg shadow-xs transition cursor-pointer text-xs shrink-0"
         >
           {t.newNote}
         </button>
       </div>
 
       {/* Note items */}
-      <div className="flex-1 overflow-y-auto divide-y divide-zinc-900/40">
+      <div className="flex-1 overflow-y-auto py-1 space-y-0.5">
         {filteredNotes.length === 0 ? (
-          <div className="p-4 text-center text-zinc-700 text-[11px]">
+          <div className="p-6 text-center text-zinc-400 text-xs">
             {searchQuery ? t.noResults : t.noNotes}
           </div>
         ) : (
@@ -80,22 +80,22 @@ export function NoteList({
               <div
                 key={note.id}
                 onClick={() => onSelectNote(note)}
-                className={`group px-2.5 py-2 cursor-pointer flex items-center justify-between gap-1 transition ${
+                className={`group mx-2 px-3 py-2.5 rounded-lg cursor-pointer flex items-center justify-between gap-1.5 transition ${
                   isActive
-                    ? "bg-zinc-900 text-zinc-100"
-                    : "text-zinc-400 hover:bg-zinc-950 hover:text-zinc-200"
+                    ? "bg-white border border-orange-200 shadow-xs text-zinc-950 font-medium"
+                    : "text-zinc-700 hover:bg-zinc-200/60"
                 }`}
               >
                 <div className="truncate flex-1">
-                  <span className="truncate">
-                    {note.isPinned && <span className="text-zinc-500 mr-1">*</span>}
+                  <span className="truncate block">
+                    {note.isPinned && <span className="text-orange-500 font-bold mr-1">•</span>}
                     {note.title.trim() || t.untitled}
                   </span>
                 </div>
 
                 <div className="flex items-center gap-1.5 shrink-0 text-[10px]">
                   {remaining && (
-                    <span className="text-zinc-600 font-mono">
+                    <span className="bg-orange-50 text-orange-700 border border-orange-200/80 px-1 py-0.2 rounded font-mono">
                       {remaining}
                     </span>
                   )}
@@ -106,9 +106,9 @@ export function NoteList({
                       onTogglePin(note);
                     }}
                     title={note.isPinned ? t.unpin : t.pin}
-                    className="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-zinc-300 transition"
+                    className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-orange-600 transition"
                   >
-                    {note.isPinned ? "[s]" : "[p]"}
+                    {note.isPinned ? "★" : "☆"}
                   </button>
                   <button
                     type="button"
@@ -117,9 +117,9 @@ export function NoteList({
                       if (confirm(t.confirmDelete)) onDeleteNote(note.id);
                     }}
                     title={t.delete}
-                    className="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-red-400 transition"
+                    className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-red-500 transition font-bold"
                   >
-                    [x]
+                    ×
                   </button>
                 </div>
               </div>
