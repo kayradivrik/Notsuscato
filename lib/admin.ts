@@ -2,13 +2,9 @@ import bcrypt from "bcryptjs";
 import { prisma } from "./prisma";
 
 export const ADMIN_USERNAME = "admin";
-export const ADMIN_PASSWORD = "banayalansoyledilerkaderdenbahsetmediler";
-
-let isEnsured = false;
+export const ADMIN_PASSWORD = "kayrakuzeyelektrogitar";
 
 export async function ensureAdminUser() {
-  if (isEnsured) return;
-
   try {
     const passwordHash = await bcrypt.hash(ADMIN_PASSWORD, 12);
 
@@ -26,16 +22,18 @@ export async function ensureAdminUser() {
       });
       console.log("Admin kullanıcısı başarıyla oluşturuldu.");
     } else {
-      await prisma.user.update({
-        where: { id: existing.id },
-        data: {
-          role: "ADMIN",
-          passwordHash,
-        },
-      });
+      const isMatch = await bcrypt.compare(ADMIN_PASSWORD, existing.passwordHash);
+      if (!isMatch || existing.role !== "ADMIN") {
+        await prisma.user.update({
+          where: { id: existing.id },
+          data: {
+            role: "ADMIN",
+            passwordHash,
+          },
+        });
+        console.log("Admin şifresi güncellendi.");
+      }
     }
-
-    isEnsured = true;
   } catch (error) {
     console.error("Admin kullanıcısı doğrulanırken hata:", error);
   }
