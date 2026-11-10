@@ -10,8 +10,8 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "notsuscato — ephemeral notes",
-  description: "Anonymous, ephemeral, and simple note taking.",
+  title: "notsuscato — İz Bırakmayan Geçici Not Defteri",
+  description: "E-posta veya telefon gerekmez. Notunuzu yazın, süresini belirleyin; süre dolduğunda kalıcı olarak imha edilir.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -21,6 +21,17 @@ export const metadata: Metadata = {
   icons: {
     icon: "/icon.svg",
     apple: "/apple-touch-icon.png",
+  },
+  openGraph: {
+    title: "notsuscato — İz Bırakmayan Geçici Not Defteri",
+    description: "Anonim, şifreli ve kendi kendini imha eden modern web not defteri.",
+    type: "website",
+    siteName: "notsuscato",
+  },
+  twitter: {
+    card: "summary",
+    title: "notsuscato",
+    description: "İz bırakmayan, geçici web not defteri.",
   },
 };
 
