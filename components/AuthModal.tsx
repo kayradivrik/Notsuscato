@@ -66,57 +66,11 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
       <div className="absolute inset-0 backdrop-blur-[4px] bg-[#fafafa]/80 z-0 pointer-events-none" />
 
       {/* Main Container */}
-      <div className="relative z-10 w-full max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-center py-6">
+      <div className="relative z-10 w-full max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-center py-4 sm:py-6">
         
-        {/* Left Side: Crisp Functional Story & Specs */}
-        <div className="md:col-span-7 space-y-6 px-2 sm:px-4">
-          <div>
-            <div className="cursor-pointer group inline-block select-none mb-3">
-              <span className="text-2xl font-bold tracking-tight text-zinc-900 group-hover:text-zinc-600 transition-colors">
-                notsuscato<span className="text-zinc-400 group-hover:text-zinc-900 inline-block transition-colors">.</span>
-              </span>
-            </div>
-
-            <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900 tracking-tight leading-snug">
-              {t.welcomeHeadline}
-            </h1>
-
-            <p className="text-xs sm:text-sm text-zinc-500 leading-relaxed mt-2.5 max-w-lg font-normal">
-              {t.welcomeDesc}
-            </p>
-          </div>
-
-          {/* Minimalist Structured Specs List (Borders > Shadows) */}
-          <div className="border border-zinc-200/90 bg-white/70 backdrop-blur-md rounded-xl divide-y divide-zinc-100 shadow-2xs">
-            <div className="p-3.5 flex items-start gap-3">
-              <span className="font-mono text-zinc-400 font-semibold text-[11px] mt-0.5">01</span>
-              <div>
-                <div className="text-xs font-semibold text-zinc-900">{t.feature1Title}</div>
-                <div className="text-xs text-zinc-500 mt-0.5 leading-relaxed">{t.feature1Desc}</div>
-              </div>
-            </div>
-
-            <div className="p-3.5 flex items-start gap-3">
-              <span className="font-mono text-zinc-400 font-semibold text-[11px] mt-0.5">02</span>
-              <div>
-                <div className="text-xs font-semibold text-zinc-900">{t.feature2Title}</div>
-                <div className="text-xs text-zinc-500 mt-0.5 leading-relaxed">{t.feature2Desc}</div>
-              </div>
-            </div>
-
-            <div className="p-3.5 flex items-start gap-3">
-              <span className="font-mono text-zinc-400 font-semibold text-[11px] mt-0.5">03</span>
-              <div>
-                <div className="text-xs font-semibold text-zinc-900">{t.feature3Title}</div>
-                <div className="text-xs text-zinc-500 mt-0.5 leading-relaxed">{t.feature3Desc}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Side: Clean Monochromatic Auth Card */}
-        <div className="md:col-span-5 w-full max-w-sm mx-auto">
-          <div className="bg-white/90 backdrop-blur-xl border border-zinc-200/90 rounded-2xl shadow-[0_4px_24px_-2px_rgba(0,0,0,0.05)] p-7 space-y-5">
+        {/* Auth Card: First on mobile so user immediately logs in */}
+        <div className="order-1 md:order-2 md:col-span-5 w-full max-w-sm mx-auto">
+          <div className="bg-white/95 backdrop-blur-xl border border-zinc-200/90 rounded-2xl shadow-xl p-5 sm:p-7 space-y-4 sm:space-y-5">
             {/* Top Bar with Language Selector */}
             <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
               <span className="text-xs font-semibold tracking-tight text-zinc-900 uppercase">
@@ -160,7 +114,7 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="kullanici_adi"
-                  className="w-full bg-zinc-50/70 border border-zinc-200 rounded-xl px-3.5 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:bg-white focus:outline-none focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 transition"
+                  className="w-full bg-zinc-50/70 border border-zinc-200 rounded-xl px-3.5 py-2.5 text-base sm:text-sm text-zinc-900 placeholder-zinc-400 focus:bg-white focus:outline-none focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 transition"
                 />
               </div>
 
@@ -174,7 +128,7 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-zinc-50/70 border border-zinc-200 rounded-xl px-3.5 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:bg-white focus:outline-none focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 transition"
+                  className="w-full bg-zinc-50/70 border border-zinc-200 rounded-xl px-3.5 py-2.5 text-base sm:text-sm text-zinc-900 placeholder-zinc-400 focus:bg-white focus:outline-none focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 transition"
                 />
               </div>
 
@@ -184,7 +138,7 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
                     <button
                       type="button"
                       onClick={() => setShowAdminKey(true)}
-                      className="text-xs text-zinc-400 hover:text-zinc-700 transition cursor-pointer"
+                      className="text-xs text-zinc-400 hover:text-zinc-700 transition cursor-pointer py-1"
                     >
                       + {t.adminKey}
                     </button>
@@ -198,7 +152,7 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
                         value={adminKey}
                         onChange={(e) => setAdminKey(e.target.value)}
                         placeholder="secret"
-                        className="w-full bg-zinc-50/70 border border-zinc-200 rounded-xl px-3 py-1.5 text-xs text-zinc-900 placeholder-zinc-400 focus:bg-white focus:outline-none focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 transition"
+                        className="w-full bg-zinc-50/70 border border-zinc-200 rounded-xl px-3 py-2 text-base sm:text-xs text-zinc-900 placeholder-zinc-400 focus:bg-white focus:outline-none focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 transition"
                       />
                     </div>
                   )}
@@ -208,7 +162,7 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-zinc-900 hover:bg-zinc-800 active:bg-black text-white font-medium py-2.5 rounded-xl shadow-xs active:scale-[0.98] transition-all duration-150 disabled:opacity-50 text-sm cursor-pointer mt-1"
+                className="w-full bg-zinc-900 hover:bg-zinc-800 active:bg-black text-white font-semibold py-2.5 rounded-xl shadow-xs active:scale-[0.98] transition-all duration-150 disabled:opacity-50 text-sm cursor-pointer mt-1"
               >
                 {loading ? t.saving : isRegister ? t.registerBtn : t.loginBtn}
               </button>
@@ -223,7 +177,7 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
                   setIsRegister(!isRegister);
                   setError(null);
                 }}
-                className="text-zinc-900 hover:underline font-semibold ml-1 cursor-pointer"
+                className="text-zinc-900 hover:underline font-semibold ml-1 cursor-pointer p-1"
               >
                 {isRegister ? t.signIn : t.signUp}
               </button>
@@ -233,6 +187,52 @@ export function AuthModal({ lang, onLanguageChange, onSuccess }: AuthModalProps)
             <p className="text-[10px] text-zinc-400 text-center leading-relaxed">
               {t.legalDisclaimer}
             </p>
+          </div>
+        </div>
+
+        {/* Feature specs: Second on mobile, left on desktop */}
+        <div className="order-2 md:order-1 md:col-span-7 space-y-4 sm:space-y-6 px-2 sm:px-4">
+          <div>
+            <div className="cursor-pointer group inline-block select-none mb-2">
+              <span className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-900 group-hover:text-zinc-600 transition-colors">
+                notsuscato<span className="text-zinc-400 group-hover:text-zinc-900 inline-block transition-colors">.</span>
+              </span>
+            </div>
+
+            <h1 className="text-xl sm:text-3xl font-bold text-zinc-900 tracking-tight leading-snug">
+              {t.welcomeHeadline}
+            </h1>
+
+            <p className="text-xs sm:text-sm text-zinc-500 leading-relaxed mt-2 max-w-lg font-normal">
+              {t.welcomeDesc}
+            </p>
+          </div>
+
+          {/* Minimalist Structured Specs List (Borders > Shadows) */}
+          <div className="border border-zinc-200/90 bg-white/70 backdrop-blur-md rounded-xl divide-y divide-zinc-100 shadow-2xs">
+            <div className="p-3 sm:p-3.5 flex items-start gap-3">
+              <span className="font-mono text-zinc-400 font-semibold text-[11px] mt-0.5">01</span>
+              <div>
+                <div className="text-xs font-semibold text-zinc-900">{t.feature1Title}</div>
+                <div className="text-xs text-zinc-500 mt-0.5 leading-relaxed">{t.feature1Desc}</div>
+              </div>
+            </div>
+
+            <div className="p-3 sm:p-3.5 flex items-start gap-3">
+              <span className="font-mono text-zinc-400 font-semibold text-[11px] mt-0.5">02</span>
+              <div>
+                <div className="text-xs font-semibold text-zinc-900">{t.feature2Title}</div>
+                <div className="text-xs text-zinc-500 mt-0.5 leading-relaxed">{t.feature2Desc}</div>
+              </div>
+            </div>
+
+            <div className="p-3 sm:p-3.5 flex items-start gap-3">
+              <span className="font-mono text-zinc-400 font-semibold text-[11px] mt-0.5">03</span>
+              <div>
+                <div className="text-xs font-semibold text-zinc-900">{t.feature3Title}</div>
+                <div className="text-xs text-zinc-500 mt-0.5 leading-relaxed">{t.feature3Desc}</div>
+              </div>
+            </div>
           </div>
         </div>
 

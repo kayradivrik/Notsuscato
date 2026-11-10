@@ -270,7 +270,9 @@ export default function Home() {
   return (
     <div className={`flex flex-col h-[100dvh] w-screen overflow-hidden transition-colors ${wrapperBg}`}>
       {/* Top Header */}
-      <header className={`h-13 border-b px-3 sm:px-6 flex items-center justify-between select-none transition-colors shrink-0 ${headerBg}`}>
+      <header className={`h-13 border-b px-3 sm:px-6 items-center justify-between select-none transition-colors shrink-0 ${headerBg} ${
+        mobileTab === "editor" ? "hidden md:flex" : "flex"
+      }`}>
         <div className="flex items-center gap-2 sm:gap-4 min-w-0">
           <div
             onClick={() => {

@@ -281,14 +281,14 @@ export function NoteEditor({
 
       {/* Top action bar */}
       <div
-        className={`relative z-10 px-3 sm:px-6 py-2.5 sm:py-3 border-b flex items-center justify-between text-xs select-none transition-colors gap-2 overflow-x-auto min-w-0 ${headerBg}`}
+        className={`relative z-10 px-2.5 sm:px-6 py-2 sm:py-3 border-b flex items-center justify-between text-xs select-none transition-colors gap-2 overflow-x-auto min-w-0 ${headerBg}`}
       >
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
           {onBack && (
             <button
               type="button"
               onClick={onBack}
-              className="md:hidden flex items-center gap-1 font-semibold text-xs text-zinc-700 bg-zinc-100 hover:bg-zinc-200 px-2.5 py-1 rounded-xl active:scale-95 transition cursor-pointer shrink-0"
+              className={`md:hidden flex items-center gap-1 font-semibold text-xs px-2.5 py-1.5 rounded-xl active:scale-95 transition cursor-pointer shrink-0 ${btnBg}`}
               title={t.backToNotes}
             >
               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -299,7 +299,7 @@ export function NoteEditor({
           )}
 
           <span
-            className={`font-semibold text-xs ${
+            className={`font-semibold text-[11px] sm:text-xs shrink-0 ${
               status === "saving"
                 ? "text-zinc-500"
                 : status === "unsaved"
@@ -311,11 +311,11 @@ export function NoteEditor({
           </span>
 
           {note.expiresAt ? (
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5 shrink-0">
               <button
                 onClick={handleTtlCycle}
                 title="Süreyi değiştir (2, 4, 6, 8, 12, 24 saat)"
-                className={`${btnBg} font-medium px-3 py-1 rounded-xl text-xs active:scale-[0.98] transition-all duration-150 cursor-pointer`}
+                className={`${btnBg} font-medium px-2.5 sm:px-3 py-1 rounded-xl text-xs active:scale-[0.98] transition-all duration-150 cursor-pointer`}
               >
                 {t.ttl}: {ttlHours}h
               </button>
@@ -331,10 +331,10 @@ export function NoteEditor({
           ) : (
             <div
               title="Bu not yöneticiye aittir ve asla silinmez"
-              className={`${btnBg} font-medium px-3 py-1 rounded-xl text-xs flex items-center gap-1.5 cursor-default select-none`}
+              className={`${btnBg} font-medium px-2.5 sm:px-3 py-1 rounded-xl text-xs flex items-center gap-1 cursor-default select-none shrink-0`}
             >
               <span className="text-emerald-500 font-bold text-sm leading-none">∞</span>
-              <span>{t.permanent}</span>
+              <span className="hidden sm:inline">{t.permanent}</span>
             </div>
           )}
 
@@ -343,20 +343,20 @@ export function NoteEditor({
           </span>
         </div>
 
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <div className="flex items-center gap-1 sm:gap-2 shrink-0">
           {/* Copy Button */}
           <button
             type="button"
             onClick={handleCopyNote}
             title={t.copy}
-            className={`${btnBg} px-2.5 sm:px-3 py-1 rounded-xl text-xs font-medium active:scale-[0.98] transition-all duration-150 cursor-pointer flex items-center gap-1.5`}
+            className={`${btnBg} px-2 sm:px-3 py-1.5 sm:py-1 rounded-xl text-xs font-medium active:scale-[0.98] transition-all duration-150 cursor-pointer flex items-center gap-1`}
           >
             {copied ? (
               <>
                 <svg className="w-3.5 h-3.5 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
-                <span className="text-emerald-600 font-semibold">{t.copied}</span>
+                <span className="text-emerald-600 font-semibold text-[11px] sm:text-xs">{t.copied}</span>
               </>
             ) : (
               <>
@@ -364,7 +364,7 @@ export function NoteEditor({
                   <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
                   <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
                 </svg>
-                <span>{t.copy}</span>
+                <span className="hidden sm:inline">{t.copy}</span>
               </>
             )}
           </button>
@@ -374,7 +374,7 @@ export function NoteEditor({
             type="button"
             onClick={() => setShowShareModal(true)}
             title={t.share}
-            className={`px-2.5 sm:px-3 py-1 rounded-xl text-xs font-medium active:scale-[0.98] transition-all duration-150 cursor-pointer flex items-center gap-1.5 ${
+            className={`px-2 sm:px-3 py-1.5 sm:py-1 rounded-xl text-xs font-medium active:scale-[0.98] transition-all duration-150 cursor-pointer flex items-center gap-1 ${
               isShared
                 ? "bg-emerald-50 text-emerald-700 border border-emerald-300 font-semibold"
                 : btnBg
@@ -387,7 +387,7 @@ export function NoteEditor({
               <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
               <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
             </svg>
-            <span>{t.share}</span>
+            <span className="hidden sm:inline">{t.share}</span>
             {isShared && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />}
           </button>
 
@@ -411,7 +411,8 @@ export function NoteEditor({
           <button
             type="button"
             onClick={() => onTogglePin(note)}
-            className={`px-2.5 sm:px-3 py-1 rounded-xl text-xs font-medium active:scale-[0.98] transition-all duration-150 cursor-pointer flex items-center gap-1.5 ${
+            title={note.isPinned ? t.unpin : t.pin}
+            className={`px-2 sm:px-3 py-1.5 sm:py-1 rounded-xl text-xs font-medium active:scale-[0.98] transition-all duration-150 cursor-pointer flex items-center gap-1 ${
               note.isPinned
                 ? "bg-zinc-900 text-white"
                 : btnBg
@@ -435,7 +436,8 @@ export function NoteEditor({
           <button
             type="button"
             onClick={() => onRequestDelete(note)}
-            className="bg-red-50 hover:bg-red-100 text-red-600 px-2.5 sm:px-3 py-1 rounded-xl text-xs font-medium active:scale-[0.98] transition-all duration-150 cursor-pointer flex items-center gap-1.5"
+            title={t.delete}
+            className="bg-red-50 hover:bg-red-100 text-red-600 px-2 sm:px-3 py-1.5 sm:py-1 rounded-xl text-xs font-medium active:scale-[0.98] transition-all duration-150 cursor-pointer flex items-center gap-1"
           >
             <svg
               className="w-3.5 h-3.5"
@@ -457,7 +459,7 @@ export function NoteEditor({
 
       {/* Editor Content Area */}
       <div
-        className="relative z-10 flex-1 flex flex-col px-4 sm:px-10 py-4 sm:py-8 max-w-4xl w-full mx-auto overflow-hidden transition-all"
+        className="relative z-10 flex-1 flex flex-col px-3 sm:px-10 py-3 sm:py-8 max-w-4xl w-full mx-auto overflow-hidden transition-all"
         style={editorPatternStyle}
       >
         <input
@@ -465,7 +467,7 @@ export function NoteEditor({
           value={title}
           onChange={(e) => handleTitleChange(e.target.value)}
           placeholder={`${t.untitled}...`}
-          className={`w-full bg-transparent text-xl sm:text-2xl font-bold ${titleColor} focus:outline-none mb-3 sm:mb-4 pb-2 border-b border-transparent focus:border-zinc-300/40 transition tracking-tight`}
+          className={`w-full bg-transparent text-xl sm:text-2xl font-bold ${titleColor} focus:outline-none mb-2 sm:mb-4 pb-1.5 sm:pb-2 border-b border-transparent focus:border-zinc-300/40 transition tracking-tight`}
         />
 
         <textarea
@@ -473,7 +475,7 @@ export function NoteEditor({
           value={body}
           onChange={(e) => handleBodyChange(e.target.value)}
           placeholder="Not içeriğinizi buraya yazın..."
-          className={`flex-1 w-full bg-transparent resize-none ${bodyColor} focus:outline-none leading-relaxed text-sm font-normal`}
+          className={`flex-1 w-full bg-transparent resize-none ${bodyColor} focus:outline-none leading-relaxed text-base sm:text-sm font-normal`}
         />
       </div>
 

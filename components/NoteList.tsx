@@ -71,64 +71,89 @@ export function NoteList({
   return (
     <aside className={`w-full md:w-72 md:shrink-0 flex flex-col h-full text-xs select-none overflow-hidden transition-colors ${asideBg}`}>
       {/* Top search & create */}
-      <div className={`p-3 border-b flex items-center gap-2 ${isDark ? "border-zinc-800" : isSepia ? "border-[#e2d8c3]" : "border-zinc-200/80"}`}>
+      <div className={`p-2.5 sm:p-3 border-b flex items-center gap-2 ${isDark ? "border-zinc-800" : isSepia ? "border-[#e2d8c3]" : "border-zinc-200/80"}`}>
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder={t.searchPlaceholder}
-          className={`flex-1 min-w-0 border rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 text-xs transition ${searchInputStyle}`}
+          className={`flex-1 min-w-0 border rounded-xl px-3 py-2 text-base sm:text-xs focus:outline-none focus:ring-2 transition ${searchInputStyle}`}
         />
         <button
           onClick={onCreateNote}
-          className={`${createBtnStyle} active:scale-[0.98] font-medium px-3 py-1.5 rounded-xl shadow-2xs transition-all duration-150 cursor-pointer text-xs shrink-0 whitespace-nowrap`}
+          className={`${createBtnStyle} active:scale-[0.98] font-medium px-3.5 py-2 rounded-xl shadow-2xs transition-all duration-150 cursor-pointer text-xs shrink-0 whitespace-nowrap flex items-center gap-1.5`}
         >
-          {t.newNote}
+          <span className="text-sm leading-none font-bold">+</span>
+          <span>{t.newNote}</span>
         </button>
       </div>
 
       {/* Note items list */}
-      <div className="flex-1 overflow-y-auto py-1.5 space-y-1">
+      <div className="flex-1 overflow-y-auto py-2 space-y-1.5 px-2">
         {filteredNotes.length === 0 ? (
-          <div className="p-6 text-center text-zinc-400 text-xs">
+          <div className="p-8 text-center text-zinc-400 text-xs">
             {searchQuery ? t.noResults : t.noNotes}
           </div>
         ) : (
           filteredNotes.map((note) => {
             const isActive = note.id === activeNoteId;
             const remaining = getRemainingTime(note.expiresAt);
+            const previewText = note.body ? note.body.replace(/\n+/g, " ").trim() : "";
 
             const itemActiveStyle = isActive
               ? isDark
-                ? "bg-zinc-900/90 border border-zinc-700 text-white shadow-2xs font-medium"
+                ? "bg-zinc-900 border-zinc-700 text-white shadow-xs"
                 : isSepia
-                ? "bg-white border border-[#dfd3ba] text-[#2e2920] shadow-2xs font-medium"
-                : "bg-white border border-zinc-300 shadow-2xs text-zinc-950 font-medium"
+                ? "bg-white border-[#dfd3ba] text-[#2e2920] shadow-xs"
+                : "bg-white border-zinc-300 shadow-xs text-zinc-950"
               : isDark
-              ? "text-zinc-400 hover:bg-zinc-900/60 hover:text-zinc-200 border border-transparent"
+              ? "text-zinc-400 hover:bg-zinc-900/60 hover:text-zinc-200 border-transparent"
               : isSepia
-              ? "text-[#59503e] hover:bg-[#efe7d5] hover:text-[#2e2920] border border-transparent"
-              : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 border border-transparent";
+              ? "text-[#59503e] hover:bg-[#efe7d5] hover:text-[#2e2920] border-transparent"
+              : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 border-transparent";
 
             return (
               <div
                 key={note.id}
                 onClick={() => onSelectNote(note)}
-                className={`group mx-2 px-3 py-2.5 rounded-xl cursor-pointer flex items-center justify-between gap-1.5 transition ${itemActiveStyle}`}
+                className={`group px-3 py-2.5 sm:py-2.5 rounded-xl cursor-pointer flex items-center justify-between gap-2.5 border transition active:scale-[0.99] ${itemActiveStyle}`}
               >
                 <div className="truncate flex-1 min-w-0">
-                  <span className="truncate block">
-                    {note.isPinned && <span className="text-zinc-900 font-bold mr-1">•</span>}
-                    {note.title.trim() || t.untitled}
-                  </span>
+                  <div className="flex items-center gap-1.5 truncate">
+                    {note.isPinned && (
+                      <span className="text-amber-500 shrink-0 font-bold text-xs" title={t.pin}>
+                        ★
+                      </span>
+                    )}
+                    <span className="truncate font-semibold text-xs">
+                      {note.title.trim() || t.untitled}
+                    </span>
+                  </div>
+                  {previewText && (
+                    <p className={`text-[11px] truncate mt-0.5 font-normal ${
+                      isActive 
+                        ? isDark ? "text-zinc-400" : isSepia ? "text-[#6b6251]" : "text-zinc-500"
+                        : "text-zinc-400"
+                    }`}>
+                      {previewText}
+                    </p>
+                  )}
                 </div>
 
-                <div className="flex items-center gap-1.5 shrink-0 text-[10px]">
+                <div className="flex items-center gap-1 shrink-0 text-[10px]">
                   {remaining && (
-                    <span className="bg-zinc-100 text-zinc-600 border border-zinc-200 px-1.5 py-0.5 rounded-md font-mono font-medium">
+                    <span className={`px-1.5 py-0.5 rounded-md font-mono font-medium text-[10px] shrink-0 ${
+                      isDark
+                        ? "bg-zinc-800 text-zinc-400 border border-zinc-700/60"
+                        : isSepia
+                        ? "bg-[#efe7d5] text-[#59503e] border border-[#dfd3ba]"
+                        : "bg-zinc-100 text-zinc-600 border border-zinc-200"
+                    }`}>
                       {remaining}
                     </span>
                   )}
+
+                  {/* Pin toggle: always accessible on touch (opacity-100 on mobile, hover on desktop) */}
                   <button
                     type="button"
                     onClick={(e) => {
@@ -136,10 +161,10 @@ export function NoteList({
                       onTogglePin(note);
                     }}
                     title={note.isPinned ? t.unpin : t.pin}
-                    className={`p-1 rounded-md active:scale-90 transition-all cursor-pointer ${
+                    className={`p-1.5 rounded-lg active:scale-90 transition-all cursor-pointer ${
                       note.isPinned
-                        ? "text-amber-500 hover:text-amber-600 hover:bg-amber-50 opacity-100"
-                        : "opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-200/60"
+                        ? "text-amber-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/30 opacity-100"
+                        : "opacity-60 sm:opacity-0 sm:group-hover:opacity-100 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-200/60 dark:hover:text-zinc-200 dark:hover:bg-zinc-800"
                     }`}
                   >
                     <svg
@@ -154,6 +179,8 @@ export function NoteList({
                       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                     </svg>
                   </button>
+
+                  {/* Delete button: accessible on touch (opacity-60 on mobile, hover on desktop) */}
                   <button
                     type="button"
                     onClick={(e) => {
@@ -161,7 +188,7 @@ export function NoteList({
                       onRequestDelete(note);
                     }}
                     title={t.delete}
-                    className="p-1 rounded-md opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-red-600 hover:bg-red-50 active:scale-90 transition-all cursor-pointer"
+                    className="p-1.5 rounded-lg opacity-60 sm:opacity-0 sm:group-hover:opacity-100 text-zinc-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 active:scale-90 transition-all cursor-pointer"
                   >
                     <svg
                       className="w-3.5 h-3.5"

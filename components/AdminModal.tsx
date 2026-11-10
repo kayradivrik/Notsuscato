@@ -223,7 +223,7 @@ export function AdminModal({ lang, onClose }: AdminModalProps) {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t.searchPlaceholder}
-              className="bg-white border border-zinc-200 rounded-xl px-2.5 sm:px-3 py-1.5 text-zinc-800 placeholder-zinc-400 focus:outline-none focus:border-zinc-400 text-xs w-24 sm:w-48"
+              className="bg-white border border-zinc-200 rounded-xl px-2.5 sm:px-3 py-1.5 text-zinc-800 placeholder-zinc-400 focus:outline-none focus:border-zinc-400 text-base sm:text-xs w-28 sm:w-48"
             />
             <button
               onClick={onClose}
