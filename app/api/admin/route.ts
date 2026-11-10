@@ -17,7 +17,9 @@ export async function GET() {
     },
   });
 
-  const [notes, users] = await Promise.all([
+  const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+  const [notes, users, notesLast24hCount, reports] = await Promise.all([
     prisma.note.findMany({
       orderBy: { createdAt: "desc" },
       include: {
@@ -43,18 +45,50 @@ export async function GET() {
         },
       },
     }),
+    prisma.note.count({
+      where: {
+        createdAt: {
+          gte: oneDayAgo,
+        },
+      },
+    }),
+    prisma.abuseReport.findMany({
+      orderBy: { createdAt: "desc" },
+      include: {
+        note: {
+          select: {
+            id: true,
+            title: true,
+            body: true,
+            isShared: true,
+            shareId: true,
+            expiresAt: true,
+            user: {
+              select: {
+                username: true,
+              },
+            },
+          },
+        },
+      },
+    }),
   ]);
 
   return NextResponse.json({
     stats: {
       totalNotes: notes.length,
       totalUsers: users.length,
+      notesLast24h: notesLast24hCount,
+      totalReports: reports.length,
     },
     notes: notes.map((n) => ({
       id: n.id,
       title: n.title,
       body: n.body,
       isPinned: n.isPinned,
+      isShared: n.isShared,
+      shareId: n.shareId,
+      views: n.views,
       createdIp: n.createdIp,
       userAgent: n.userAgent,
       createdAt: n.createdAt,
@@ -71,6 +105,19 @@ export async function GET() {
       createdAt: u.createdAt,
       noteCount: u._count.notes,
     })),
+    reports: reports.map((r) => ({
+      id: r.id,
+      noteId: r.noteId,
+      reason: r.reason,
+      details: r.details,
+      ip: r.ip,
+      status: r.status,
+      createdAt: r.createdAt,
+      noteTitle: r.note?.title || "Silinmiş Not",
+      noteAuthor: r.note?.user?.username || "Bilinmiyor",
+      noteShared: r.note?.isShared || false,
+      shareId: r.note?.shareId || null,
+    })),
   });
 }
 
@@ -86,6 +133,11 @@ export async function DELETE(req: NextRequest) {
 
   if (!id) {
     return NextResponse.json({ error: "ID belirtilmedi." }, { status: 400 });
+  }
+
+  if (type === "report") {
+    await prisma.abuseReport.delete({ where: { id } });
+    return NextResponse.json({ success: true, message: "Bildirim silindi." });
   }
 
   if (type === "note") {

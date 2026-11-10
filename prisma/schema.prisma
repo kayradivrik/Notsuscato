@@ -29,14 +29,34 @@ model Note {
   title     String
   body      String
   isPinned  Boolean   @default(false)
+  isShared  Boolean   @default(false)
+  shareId   String?   @unique
+  views     Int       @default(0)
   createdIp String?
   userAgent String?
   expiresAt DateTime?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user    User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reports AbuseReport[]
 
   @@index([userId, updatedAt])
   @@index([expiresAt])
+  @@index([shareId])
+}
+
+model AbuseReport {
+  id        String   @id @default(cuid())
+  noteId    String
+  reason    String
+  details   String?
+  ip        String?
+  status    String   @default("PENDING") // PENDING, RESOLVED, DISMISSED
+  createdAt DateTime @default(now())
+
+  note Note @relation(fields: [noteId], references: [id], onDelete: Cascade)
+
+  @@index([noteId])
+  @@index([createdAt])
 }

@@ -5,6 +5,9 @@ export interface DecryptedNote {
   title: string;
   body: string;
   isPinned: boolean;
+  isShared?: boolean;
+  shareId?: string | null;
+  views?: number;
   createdIp?: string;
   userAgent?: string;
   expiresAt?: string;

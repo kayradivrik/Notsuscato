@@ -144,6 +144,9 @@ export default function Home() {
               body: newBody,
               updatedAt: now,
               expiresAt: updatedRecord?.expiresAt || n.expiresAt,
+              isShared: updatedRecord?.isShared !== undefined ? updatedRecord.isShared : n.isShared,
+              shareId: updatedRecord?.shareId !== undefined ? updatedRecord.shareId : n.shareId,
+              views: updatedRecord?.views !== undefined ? updatedRecord.views : n.views,
             }
           : n
       )

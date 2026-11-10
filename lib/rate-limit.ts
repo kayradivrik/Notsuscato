@@ -47,13 +47,20 @@ export function checkRateLimit(
 }
 
 export function getClientIp(request: Request): string {
-  const forwarded = request.headers.get("x-forwarded-for");
-  if (forwarded) {
-    return forwarded.split(",")[0].trim();
+  // 1. Cloudflare real client IP
+  const cfConnectingIp = request.headers.get("cf-connecting-ip");
+  if (cfConnectingIp) {
+    return cfConnectingIp.trim();
   }
+  // 2. Nginx / reverse proxy real IP
   const realIp = request.headers.get("x-real-ip");
   if (realIp) {
     return realIp.trim();
+  }
+  // 3. Standard x-forwarded-for header (first IP in comma-separated list)
+  const forwarded = request.headers.get("x-forwarded-for");
+  if (forwarded) {
+    return forwarded.split(",")[0].trim();
   }
   return "127.0.0.1";
 }
