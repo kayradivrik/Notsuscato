@@ -15,10 +15,12 @@ if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;
 }
 
-// Enable SQLite WAL mode and busy timeout for high concurrency & preventing SQLITE_BUSY errors
+// Enable SQLite WAL mode and busy timeout only when running local SQLite
 if (!globalForPrisma.prismaConfigured) {
   globalForPrisma.prismaConfigured = true;
-  prisma.$queryRawUnsafe("PRAGMA journal_mode = WAL;").catch(() => {});
-  prisma.$queryRawUnsafe("PRAGMA busy_timeout = 5000;").catch(() => {});
+  if (process.env.DATABASE_URL?.startsWith("file:")) {
+    prisma.$queryRawUnsafe("PRAGMA journal_mode = WAL;").catch(() => {});
+    prisma.$queryRawUnsafe("PRAGMA busy_timeout = 5000;").catch(() => {});
+  }
 }
 

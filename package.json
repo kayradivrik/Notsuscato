@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma db push && next build",
     "start": "next start",
     "lint": "eslint",
     "postinstall": "prisma generate",
@@ -13,11 +13,13 @@
   "dependencies": {
     "@prisma/client": "^6.19.3",
     "@types/bcryptjs": "^2.4.6",
+    "@types/pg": "^8.23.1",
     "bcryptjs": "^3.0.3",
     "jose": "^6.2.17",
     "jszip": "^3.10.2",
     "lucide-react": "^1.70.0",
     "next": "16.4.5",
+    "pg": "^8.23.1",
     "prisma": "^6.19.3",
     "react": "19.3.0",
     "react-dom": "19.3.0",
