@@ -61,3 +61,4 @@ export async function POST(
     return NextResponse.json({ error: "İşlem başarısız oldu." }, { status: 500 });
   }
 }
+

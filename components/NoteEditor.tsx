@@ -144,55 +144,13 @@ export function NoteEditor({
     triggerSave(title, body, nextTtl);
   };
 
-  // Formatting helper: wraps or prefixes text in the textarea
-  const applyFormatting = (prefix: string, suffix: string = "") => {
-    const el = textareaRef.current;
-    if (!el) return;
-    const start = el.selectionStart;
-    const end = el.selectionEnd;
-    const current = el.value;
-    const selected = current.substring(start, end);
-
-    let nextText: string;
-    let nextPos: number;
-
-    if (prefix === "- [ ] ") {
-      const lineStart = current.lastIndexOf("\n", start - 1) + 1;
-      nextText = current.slice(0, lineStart) + "- [ ] " + current.slice(lineStart);
-      nextPos = start + 6;
-    } else {
-      nextText = current.substring(0, start) + prefix + selected + suffix + current.substring(end);
-      nextPos = selected ? end + prefix.length + suffix.length : start + prefix.length;
-    }
-
-    setBody(nextText);
-    setStatus("unsaved");
-    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
-    saveTimeoutRef.current = setTimeout(() => {
-      triggerSave(title, nextText);
-    }, 600);
-
-    setTimeout(() => {
-      el.focus();
-      el.setSelectionRange(nextPos, nextPos);
-    }, 0);
-  };
-
-  // Keyboard shortcuts (Ctrl+S, Ctrl+B, Ctrl+I)
+  // Keyboard shortcut (Ctrl+S for immediate save)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.ctrlKey || e.metaKey) {
-        if (e.key === "s") {
-          e.preventDefault();
-          if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
-          if (note) triggerSave(title, body);
-        } else if (e.key === "b" && document.activeElement === textareaRef.current) {
-          e.preventDefault();
-          applyFormatting("**", "**");
-        } else if (e.key === "i" && document.activeElement === textareaRef.current) {
-          e.preventDefault();
-          applyFormatting("*", "*");
-        }
+      if ((e.ctrlKey || e.metaKey) && e.key === "s") {
+        e.preventDefault();
+        if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+        if (note) triggerSave(title, body);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -507,38 +465,8 @@ export function NoteEditor({
           value={title}
           onChange={(e) => handleTitleChange(e.target.value)}
           placeholder={`${t.untitled}...`}
-          className={`w-full bg-transparent text-xl sm:text-2xl font-bold ${titleColor} focus:outline-none mb-2 pb-2 border-b border-transparent focus:border-zinc-300/40 transition tracking-tight`}
+          className={`w-full bg-transparent text-xl sm:text-2xl font-bold ${titleColor} focus:outline-none mb-3 sm:mb-4 pb-2 border-b border-transparent focus:border-zinc-300/40 transition tracking-tight`}
         />
-
-        {/* Lightweight Formatting Micro-Toolbar */}
-        <div className="flex items-center gap-1 mb-3 text-xs text-zinc-400 select-none">
-          <button
-            type="button"
-            onClick={() => applyFormatting("**", "**")}
-            title={t.boldTooltip}
-            className="px-2 py-0.5 rounded-md hover:bg-zinc-200/50 hover:text-zinc-800 font-bold transition cursor-pointer text-[11px]"
-          >
-            B
-          </button>
-          <button
-            type="button"
-            onClick={() => applyFormatting("*", "*")}
-            title={t.italicTooltip}
-            className="px-2 py-0.5 rounded-md hover:bg-zinc-200/50 hover:text-zinc-800 italic font-serif transition cursor-pointer text-[11px]"
-          >
-            I
-          </button>
-          <span className="text-zinc-300">|</span>
-          <button
-            type="button"
-            onClick={() => applyFormatting("- [ ] ")}
-            title={t.checklistTooltip}
-            className="px-2 py-0.5 rounded-md hover:bg-zinc-200/50 hover:text-zinc-800 transition cursor-pointer text-[11px] flex items-center gap-1"
-          >
-            <span className="font-mono">☑</span>
-            <span>Liste</span>
-          </button>
-        </div>
 
         <textarea
           ref={textareaRef}

@@ -32,3 +32,4 @@ export async function GET() {
     return NextResponse.json({ error: "Yedek alınamadı." }, { status: 500 });
   }
 }
+

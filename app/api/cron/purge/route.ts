@@ -48,3 +48,4 @@ async function handlePurge(req: NextRequest) {
     );
   }
 }
+
